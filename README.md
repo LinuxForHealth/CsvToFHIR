@@ -10,7 +10,7 @@ Loads CSV records from file, and maps them to FHIR resources.
 
 ```shell
 # clone the repo
-git clone https://github.com/LinuxForHealth/csv2hir
+git clone https://github.com/LinuxForHealth/CsvToFHIR.git
 cd csvtofhir
 
 # create virtual environment and create an "editable" install

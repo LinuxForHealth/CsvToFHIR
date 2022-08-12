@@ -1,0 +1,66 @@
+{
+  "general": {
+    "timeZone": "US/Eastern",
+    "tenantId": "sample-tenant",
+    "streamType": "live",
+    "emptyFieldValues": [
+      "empty",
+      "\\n"
+    ]
+  },
+  "fileDefinitions": {
+    "Patient": {
+      "comment": "contains patient demographic fields",
+      "valueDelimiter": ",",
+      "resourceType": "Patient",
+      "groupByKey": "patientId",
+      "tasks": [
+        {
+          "name": "add_constant",
+          "params": {
+            "name": "ssnSystem",
+            "value": "http://hl7.org/fhir/sid/us-ssn"
+          }
+        },
+        {
+          "name": "format_date",
+          "comment": "Formats the patient birth date",
+          "params": {
+            "columns": [
+              "dateOfBirth"
+            ],
+            "date_format": "%Y-%m-%d"
+          }
+        },
+        {
+          "name": "map_codes",
+          "comment": "Maps the patient gender",
+          "params": {
+            "code_map": {
+              "sex": {
+                "default": "unknown",
+                "F": "female",
+                "M": "male",
+                "O": "other"
+              }
+            }
+          }
+        },
+        {
+          "name": "rename_columns",
+          "comment": "Renames columns to the standard dictionary names",
+          "params": {
+            "column_map": {
+              "patientId": "patientInternalId",
+              "hospitalId": "assigningAuthority",
+              "givenName": "nameFirstMiddle",
+              "familyName": "nameLast",
+              "sex": "gender",
+              "dateOfBirth": "birthDate"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

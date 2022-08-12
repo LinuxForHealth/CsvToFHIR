@@ -1,0 +1,59 @@
+{
+  "general": {
+    "timeZone": "US/Eastern",
+    "tenantId": "sample-tenant",
+    "streamType": "live",
+    "emptyFieldValues": [
+      "empty",
+      "\\n"
+    ]
+  },
+  "fileDefinitions": {
+    "Patient": {
+      "valueDelimiter": ",",
+      "resourceType": "Patient",
+      "groupByKey": "patientInternalId",
+      "headers": [
+        "assigningAuthority",
+        "encounterId",
+        "patientInternalId",
+        "gender",
+        "birthDate",
+        "nameFirstMiddle",
+        "nameLast",
+        "ssn"
+      ],
+      "tasks": [
+        {
+          "name": "add_constant",
+          "params": {
+            "name": "ssnSystem",
+            "value": "http://hl7.org/fhir/sid/us-ssn"
+          }
+        },
+        {
+          "name": "format_date",
+          "params": {
+            "columns": [
+              "dateOfBirth"
+            ],
+            "date_format": "%Y-%m-%d"
+          }
+        },
+        {
+          "name": "map_codes",
+          "params": {
+            "code_map": {
+              "gender": {
+                "default": "unknown",
+                "F": "female",
+                "M": "male",
+                "O": "other"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

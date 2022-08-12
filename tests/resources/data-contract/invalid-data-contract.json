@@ -1,0 +1,46 @@
+{
+  "fileDefinitions": {
+    "Patient": {
+      "valueDelimiter": ",",
+      "resourceType": "Patient",
+      "groupByKey": "patientId",
+      "tasks": [
+        {
+          "name": "format_date",
+          "params": {
+            "columns": [
+              "dateOfBirth"
+            ],
+            "date_format": "%Y-%m-%d"
+          }
+        },
+        {
+          "name": "map_codes",
+          "params": {
+            "code_map": {
+              "sex": {
+                "default": "unknown",
+                "F": "female",
+                "M": "male",
+                "O": "other"
+              }
+            }
+          }
+        },
+        {
+          "name": "rename_columns",
+          "params": {
+            "column_map": {
+              "patientId": "patientInternalId",
+              "hospitalId": "assigningAuthority",
+              "givenName": "nameFirstMiddle",
+              "familyName": "nameLast",
+              "sex": "gender",
+              "dateOfBirth": "birthDate"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

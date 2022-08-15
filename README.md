@@ -24,7 +24,7 @@ python3 -m pip install -e .[dev]
 python3 -m pytest
 ```
 
-### Windows Powershell
+### Windows Setup
 Launch the Windows Command and "Run as Administrator"
 ```shell
 # clone the repo

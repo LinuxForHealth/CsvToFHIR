@@ -8,26 +8,61 @@ Loads CSV records from file, and maps them to FHIR resources.
 
 ## Quickstart CLI
 
+### OS X / Linux
 ```shell
 # clone the repo
 git clone https://github.com/LinuxForHealth/CsvToFHIR.git
-cd csvtofhir
+cd CsvToFHIR
 
 # create virtual environment and create an "editable" install
-python3 -m venv venv && source venv/bin/activate && python3 -m pip install --upgrade pip setuptools
+python3 -m venv venv --clear && \
+        source venv/bin/activate && \
+        python3 -m pip install --upgrade pip setuptools wheel
+        
 python3 -m pip install -e .[dev]
 # run tests
 python3 -m pytest
 ```
 
-The CSVToFHIR CLI supports:
-
-### DataContract validation
+### Windows Powershell
+Launch the Windows Command and "Run as Administrator"
 ```shell
-csvtofhir% csvtofhir validate -f tests/resources/data-contract/data-contract.json
+# clone the repo
+git clone https://github.com/LinuxForHealth/CsvToFHIR.git
+cd CsvToFHIR
+
+# create the virtual environment (may take some time to complete)
+python3 -m venv venv --clear
+.\venv\Scripts\activate.bat
+python3 -m pip install --upgrade pip setuptools wheel
+# integrate the local development environment with the virtual environment
+python3 -m pip install -e .[dev]
+````
+The `pip install` commmand for the local project will print a WARNING similar to
+```shell
+WARNING: The script csvtofhir.exe is installed in 'C:\Users\someuser\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts'
+which is not on PATH.
+
+Consider adding this directory to PATH or, if you prefer to suppress this warning, use --no-warn-script-location.
 ```
 
-### CSV Conversion
+On Windows the csvtofhir CLI is "compiled" as an EXE and resides within a local cache directory. This directory must be
+on the SYSTEM path in order to invoke csvtofhir without including the full path to the executable.
+
+To execute unit tests, simply run:
+```shell
+python3 -m pytest
+```
+
+### CSVToFHIR CLI
+The CLI supports:
+
+#### DataContract validation
+```shell
+csvtofhir validate -f tests/resources/data-contract/data-contract.json
+```
+
+#### CSV Conversion
 
 The csvtofhir convert command has two processing modes, directory mode, `-d`, and file mode, `-f`.
 

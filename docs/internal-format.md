@@ -241,7 +241,6 @@ The Medication Use Dictionary Record contains the following fields:
 - medicationUseCategoryCode
 - medicationUseCategoryCodeSystem
 - medicationUseCategoryCodeText
-- medicationUseStartedOn
 - medicationUseOccuranceDateTime
 - medicationCode
 - medicationCodeDisplay

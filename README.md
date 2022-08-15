@@ -16,6 +16,13 @@ cd csvtofhir
 # create virtual environment and create an "editable" install
 python3 -m venv venv && source venv/bin/activate && python3 -m pip install --upgrade pip setuptools
 python3 -m pip install -e .[dev]
+
+# From the venv: install the packages
+python setup.py install
+
+# From the venv: build
+python setup.py build
+
 # run tests
 python3 -m pytest
 ```

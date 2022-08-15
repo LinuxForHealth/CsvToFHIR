@@ -39,7 +39,6 @@ class MedicationUseCsv(CsvBaseModel):
     medicationUseCategoryCode: Optional[str]
     medicationUseCategoryCodeSystem: Optional[str]
     medicationUseCategoryCodeText: Optional[str]
-    medicationUseStartedOn: Optional[str]
     medicationUseOccuranceDateTime: Optional[str]
 
     medicationCode: Optional[str]

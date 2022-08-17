@@ -26,3 +26,10 @@ jobs:
     - name: Execute Unit Tests
       run: |
         python -m pytest
+    - name: Run csvtofhir CLI
+      run: |
+        csvtofhir validate -f demo/config/data-contract.json
+        csvtofhir convert -f demo/input/patient.csv -c demo/config  -o demo/output
+        rm -rf demo/output
+        mkdir -p demo/output
+        csvtofhir convert -d demo  -o demo/output

@@ -1,0 +1,2 @@
+"id","first_name","middle_name","last_name","salutation","suffix","birth_date","address","city","state","zip","phone","gender"
+"patient-123","Jane","Test","Record","Mrs.","","1994-01-01","1400 Somewhere Avenue","Springfield","IL","90210","555-111-2222","female"

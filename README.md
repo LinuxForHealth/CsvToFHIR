@@ -129,3 +129,4 @@ To utilize logging within a local development environment, please review the com
 - [Implementation Guide](docs/implementation-guide.md)
 - [Internal Format Guide](docs/internal-format.md)
 - [IDE Configuration](docs/ide.md)
+- [Contributing](docs/contributing.md)

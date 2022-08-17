@@ -86,7 +86,7 @@ The `-c` flag is used to specify the configuration directory.
 The `-o` flag is used in the same manner as `directory` mode.
 
 ```shell
-csvtofhir convert -f demo/input/Patient.csv -c demo/config  -o demo/output
+csvtofhir convert -f demo/input/patient.csv -c demo/config  -o demo/output
 ```
 
 ## Code Formatting

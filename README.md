@@ -38,7 +38,7 @@ python3 -m pip install --upgrade pip setuptools wheel
 # integrate the local development environment with the virtual environment
 python3 -m pip install -e .[dev]
 ````
-The `pip install` commmand for the local project will print a WARNING similar to
+The `pip install` command for the local project will print a WARNING similar to
 ```shell
 WARNING: The script csvtofhir.exe is installed in 'C:\Users\someuser\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\LocalCache\local-packages\Python39\Scripts'
 which is not on PATH.
@@ -59,7 +59,7 @@ The CLI supports:
 
 #### DataContract validation
 ```shell
-csvtofhir validate -f tests/resources/data-contract/data-contract.json
+csvtofhir validate -f demo/config/data-contract.json
 ```
 
 #### CSV Conversion
@@ -74,8 +74,10 @@ In `directory` mode the convert command is given a base directory path which con
 The `-o` parameter is used to specify the location where output files are saved.
 
 ```shell
-csvtofhir convert -d /data/csv-data  -o /data/output
+csvtofhir convert -d demo  -o demo/output
 ```
+
+The `convert` utility creates a separate output directory for each unique patient record.
 
 #### File Mode
 In `file` mode the convert command is provided a single file path to convert.
@@ -84,7 +86,7 @@ The `-c` flag is used to specify the configuration directory.
 The `-o` flag is used in the same manner as `directory` mode.
 
 ```shell
-csvtofhir convert -f /data/csv-data/Patient.csv -c /data/config  -o /data/output
+csvtofhir convert -f demo/input/Patient.csv -c demo/config  -o demo/output
 ```
 
 ## Code Formatting

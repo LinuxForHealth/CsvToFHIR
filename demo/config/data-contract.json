@@ -1,0 +1,49 @@
+{
+  "general": {
+    "timeZone": "US/Eastern",
+    "tenantId": "tenant-a",
+    "streamType": "live",
+    "emptyFieldValues": [
+      "empty",
+      "\\n"
+    ]
+  },
+  "fileDefinitions": {
+    "Patient": {
+      "valueDelimiter": ",",
+      "resourceType": "Patient",
+      "groupByKey": "id",
+      "tasks": [
+        {
+          "name": "format_date",
+          "params": {
+            "columns": [
+              "birth_date"
+            ],
+            "date_format": "%Y-%m-%d"
+          }
+        },
+        {
+          "name": "rename_columns",
+          "params": {
+            "column_map": {
+              "id": "patientInternalId",
+              "first_name": "nameFirst",
+              "middle_name": "nameMiddle",
+              "last_name": "nameLast",
+              "salutation": "prefix",
+              "suffix": "suffix",
+              "birth_date": "birthDate",
+              "address": "address1",
+              "city": "city",
+              "state": "state",
+              "zip": "postalCode",
+              "phone": "telecomPhone",
+              "gender": "gender"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

@@ -417,7 +417,7 @@ def test_conditional_column_task_with_filename(monkeypatch, converter_config):
     """
     monkeypatch.setattr(tasks, "get_converter_config", lambda: converter_config)
 
-    condition_map = "states.csv"
+    condition_map = "zip_states.csv"
 
     input_data_frame = DataFrame()
     expected_data_frame = DataFrame()

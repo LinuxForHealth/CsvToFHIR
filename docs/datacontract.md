@@ -16,7 +16,7 @@ conversion process. A single data contract file is used to support multiple CSVT
 | Key Name        | Description                                                                                                             | Required |
 |:----------------|:------------------------------------------------------------------------------------------------------------------------|:---------|
 | general         | Contains general settings for the CSVToFHIR service which apply to all file definitions such as tenant id, timezone, etc | Y        |
- | fileDefinitions | Defines the CSVToFHIR mapping configuration for each CSV source file                                                  | Y        |
+| fileDefinitions | Defines the CSVToFHIR mapping configuration for each CSV source file                                                  | Y        |
 
 ### General 
 ```json
@@ -100,5 +100,27 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 | name     | The task name                                 | Y        |
 | comment  | Additional comment/documentation for the task | N        |
 | params   | Dictionary of task parameters                 | N        |
+
+
+#### Supported Tasks
+
+<table>
+<tr>
+    <th>Task Name</th>
+    <th>Description</th>
+    <th>Parameters</th>
+    <th>Examples</th></tr>
+<tr>
+    <td>add_constant</td>
+    <td>Creates an additional column with constant value assigned</td>
+    <td>name<br>value</td>
+    <td>"name": "add_constant",<br>
+          "params": {<br>
+            "name": "ssnSystem",<br>
+            "value": "http://hl7.org/fhir/sid/us-ssn"<br>
+          }<br>
+    </td>
+</tr>
+</table>
 
 

@@ -106,64 +106,85 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 
 <table>
 <tr>
-    <th>Task Name</th>
-    <th>Description</th>
-    <th>Parameters</th>
-    <th>Examples</th></tr>
-<tr>
-    <td>add_constant</td>
-    <td>Creates an additional column with constant value assigned</td>
-    <td>name<br>value</td>
-    <td>
-      <pre>
-      {
-        "name": "add_constant",
-        "params": {
-          "name": "ssnSystem",
-          "value": "http://hl7.org/fhir/sid/us-ssn"
-        }
-      }
-   </pre>
-    </td>
+<th>Task Name</th>
+<th>Description</th>
+<th>Parameters</th>
+<th>Examples</th>
 </tr>
 <tr>
-    <td>map_codes</td>
-    <td>Maps 'codes' or values to a target representation.<br>
-        map_codes supports inline mappings as a dictionary, and external mappings using a file name.<br>
-        If a map of “default” is provided, any value that does not match another mapping key is given this value. 
-    </td>
-    <td>code_map: Contains a mapping from source value to target value for a given set of fields or the name of a file which contains the mappings.</td>
-    <td>
-      Internal data contract mapping
-      <pre>
-      {
-        "name": "map_codes",
-        "params": {
-          "code_map": {
-            "sex": {
-              "default": "unknown",
-              "F": "female",
-              "M": "male",
-              "O": "other"
-            }
-         }
-        }
-      }
-      </pre>
-      External mapping:
-      <pre>
-      {
-        "name": "map_codes",
-        "params": {
-          "code_map": {
-            "sex": "sex.csv"
-          }
-        }
-      }
-      </pre>
-    </td>
+<td>add_constant</td>
+<td>Creates an additional column with constant value assigned</td>
+<td>name<br>value</td>
+<td>
+<pre>
+{
+  "name": "add_constant",
+  "params": {
+    "name": "ssnSystem",
+    "value": "http://hl7.org/fhir/sid/us-ssn"
+  }
+}
+</pre>
+</td>
 </tr>
-
+<tr>
+<td>map_codes</td>
+<td>Maps 'codes' or values to a target representation.<br>
+map_codes supports inline mappings as a dictionary, and external mappings using a file name.<br>
+If a map of “default” is provided, any value that does not match another mapping key is given this value. 
+</td>
+<td>code_map: Contains a mapping from source value to target value for a given set of fields or the name of a file which contains the mappings.</td>
+<td>
+Internal data contract mapping
+<pre>
+{
+  "name": "map_codes",
+  "params": {
+    "code_map": {
+      "sex": {
+        "default": "unknown",
+        "F": "female",
+        "M": "male",
+        "O": "other"
+      }
+    }
+  }
+}
+</pre>
+External mapping:
+<pre>
+{
+  "name": "map_codes",
+  "params": {
+    "code_map": {
+      "sex": "sex.csv"
+    }
+  }
+}
+</pre>
+</td>
+</tr>
+<tr>
+<td>rename_columns</td>
+<td>Renames a DataFrame’s columns</td>
+<td>column_map: A dictionary which maps the source column names to the target column names.</td>
+<td>
+<pre>
+{
+  "name": "rename_columns",
+  "params": {
+    "column_map": {
+      "hospitalId": "assigningAuthority",
+      "givenName": "nameFirstMiddle",
+      "familyName": "nameLast",
+      "sex": "gender",
+      "dateOfBirth": "birthDate"
+    }
+  }
+}
+</pre>
+</td>
+</tr>
 </table>
 
 

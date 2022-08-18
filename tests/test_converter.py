@@ -122,7 +122,12 @@ def patient_resource() -> Patient:
         ],
         "name": [{"text": "Thomas Jones", "family": "Jones", "given": ["Thomas"]}],
         "gender": "male",
-        "birthDate": "1951-07-06"
+        "birthDate": "1951-07-06",
+        "address": [
+            {
+                "state": "MN"
+            }
+        ]
     }
     return Patient(**patient_data)
 

@@ -13,10 +13,10 @@ conversion process. A single data contract file is used to support multiple CSVT
 }
 ```
 
-| Key Name        | Description                                                                                                             | Required |
-|:----------------|:------------------------------------------------------------------------------------------------------------------------|:---------|
+| Key Name        | Description                                                                                                              | Required |
+| :-------------- | :----------------------------------------------------------------------------------------------------------------------- | :------- |
 | general         | Contains general settings for the CSVToFHIR service which apply to all file definitions such as tenant id, timezone, etc | Y        |
- | fileDefinitions | Defines the CSVToFHIR mapping configuration for each CSV source file                                                  | Y        |
+| fileDefinitions | Defines the CSVToFHIR mapping configuration for each CSV source file                                                     | Y        |
 
 ### General 
 ```json
@@ -35,7 +35,7 @@ conversion process. A single data contract file is used to support multiple CSVT
 ```
 
 | Key Name           | Description                                                                                                   | Required |
-|:-------------------|:--------------------------------------------------------------------------------------------------------------|:---------|
+| :----------------- | :------------------------------------------------------------------------------------------------------------ | :------- |
 | timeZone           | The default timezone to apply to datetime values as necessary. The timeone is a valid tz database/IANA values | Y        |
 | tenantId           | The customer tenant id                                                                                        | Y        |
 | assigningAuthority | The default assigning authority/system of record, applied to code values where needed                         | N        |
@@ -66,10 +66,10 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 ```
 
 | Key Name               | Description                                                                                                                   | Required |
-|:-----------------------|:------------------------------------------------------------------------------------------------------------------------------|:---------|
+| :--------------------- | :---------------------------------------------------------------------------------------------------------------------------- | :------- |
 | valueDelimiter         | The value, or field, delimiter used in the "CSV" file. Defaults to ","                                                        | N        |
 | comment                | Provides an additional description/comment for the file definition                                                            | N        |
-| convertColumnsToString | When true converts all input columns to Python's "str" data type. If False, Pandas will infer the datatype. Defaults to True. | N        | 
+| convertColumnsToString | When true converts all input columns to Python's "str" data type. If False, Pandas will infer the datatype. Defaults to True. | N        |
 | resourceType           | The target FHIR resource type.                                                                                                | Y        |
 | groupByKey             | The field used to associate the record with other records in separate CSV payloads                                            | Y        |
 | headers                | Provides a header record for a CSV source file without a header. Column names reflect the target record format                | N        |
@@ -96,9 +96,271 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 
 
 | Key Name | Description                                   | Required |
-|:---------|:----------------------------------------------|:---------|
+| :------- | :-------------------------------------------- | :------- |
 | name     | The task name                                 | Y        |
 | comment  | Additional comment/documentation for the task | N        |
 | params   | Dictionary of task parameters                 | N        |
+
+
+#### Supported Tasks
+
+<table>
+  <tr>
+    <th>Task Name</th>
+    <th>Description</th>
+    <th>Parameters</th>
+    <th>Examples</th>
+  </tr>
+  <tr>
+    <td>add_constant</td>
+    <td>Creates an additional column with constant value assigned</td>
+    <td>
+      <b>name:</b> constant name used as the new column name<br>
+      <b>value:</b> constant value
+    </td>
+    <td>
+      <pre>
+{
+  "name": "add_constant",
+  "params": {
+    "name": "ssnSystem",
+    "value": "http://hl7.org/fhir/sid/us-ssn"
+  }
+}
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>add_row_num</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>append_list</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>build_object_array</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>change_case</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>compare_to_date</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>conditional_column</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>conditional_column_update</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>condition_column_with_prerequisite</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>convert_to_list</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>copy_columns</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>filter_to_columns</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>find_not_null_value</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>format_date</td>
+    <td>Formats date string values within a column to a target format.</td>
+    <td>
+      <b>columns:</b>  the column name(s) to update<br>
+      <b>date_format:</b> the date format to apply to the column(s). Defaults to “%Y-%m-%d”</td>
+    <td>
+      <pre>
+{
+  "name": "format_date",
+  "params": {
+    "columns": [
+      "dateOfBirth"
+    ],
+    "date_format": "%Y-%m-%d"
+  }
+}
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>map_codes</td>
+    <td>Maps 'codes' values to a target representation.  map_codes supports inline mappings as a dictionary, and external mappings using a file name.  If a map of “default” is provided, any value that does not match another mapping key is given this value. 
+    </td>
+    <td>
+      <b>code_map:</b> Contains a mapping from source value to target value for a given set of fields or the name of a file which contains the mappings.
+    </td>
+    <td>
+      Internal data contract mapping
+      <pre>
+{
+  "name": "map_codes",
+  "params": {
+    "code_map": {
+      "sex": {
+        "default": "unknown",
+        "F": "female",
+        "M": "male",
+        "O": "other"
+      }
+    }
+  }
+}
+      </pre>
+      External mapping:
+      <pre>
+{
+  "name": "map_codes",
+  "params": {
+    "code_map": {
+      "sex": "sex.csv"
+    }
+  }
+}
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>rename_columns</td>
+    <td>Renames column(s)</td>
+    <td><b>column_map:</b> A dictionary which maps the source column names to the target column names.</td>
+    <td>
+      <pre>
+{
+  "name": "rename_columns",
+  "params": {
+    "column_map": {
+      "hospitalId": "assigningAuthority",
+      "givenName": "nameFirstMiddle",
+      "familyName": "nameLast",
+      "sex": "gender",
+      "dateOfBirth": "birthDate"
+    }
+  }
+}
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>replace_text</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>remove_whitespace_from_columns</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>set_nan_to_none</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>split_column</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>split_row</td>
+    <td></td>
+    <td></td>
+    <td>
+      <pre>
+      </pre>
+    </td>
+  </tr>
+</table>
 
 

@@ -21,7 +21,8 @@
         "birthDate",
         "nameFirstMiddle",
         "nameLast",
-        "ssn"
+        "ssn",
+        "state"
       ],
       "tasks": [
         {
@@ -50,6 +51,15 @@
                 "M": "male",
                 "O": "other"
               }
+            }
+          }
+        },
+        {
+          "name": "map_codes",
+          "comment": "Maps state to abbreviation",
+          "params": {
+            "code_map": {
+              "state": "states.csv"
             }
           }
         }

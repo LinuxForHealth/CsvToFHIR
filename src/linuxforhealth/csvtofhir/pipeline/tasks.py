@@ -47,6 +47,15 @@ def add_constant(
     Adds a constant value as a column in a DataFrame.
     The column is appended to each DataFrame row
 
+    Example:
+    {
+      "name": "add_constant",
+      "params": {
+        "name": "ssnSystem",
+        "value": "http://hl7.org/fhir/sid/us-ssn"
+      }
+    }
+
     :param data_frame: The input DataFrame
     :param name: The constant name, used as the DataFrame column name.
     :param value: The constant value
@@ -196,6 +205,17 @@ def format_date(
     """
     Formats date string values within a DataFrame column to a target date format.
 
+    Example:
+    {
+      "name": "format_date",
+      "params": {
+        "columns": [
+          "dateOfBirth"
+        ],
+        "date_format": "%Y-%m-%d"
+      }
+    }
+
     :param data_frame: The input DataFrame
     :param columns: The column names to update
     :param date_format: The target date format. Defaults to %Y-%m-%d
@@ -215,6 +235,20 @@ def format_date(
 def rename_columns(data_frame: DataFrame, column_map: Dict[str, str]) -> DataFrame:
     """
     Renames a DataFrame's columns using a column_map, or dictionary.
+
+    Example:
+    {
+      "name": "rename_columns",
+      "params": {
+        "column_map": {
+          "hospitalId": "assigningAuthority",
+          "givenName": "nameFirstMiddle",
+          "familyName": "nameLast",
+          "sex": "gender",
+          "dateOfBirth": "birthDate"
+        }
+      }
+    }
 
     :param data_frame: The input DataFrame
     :param column_map: The dictionary used to map current column names to desired column names.
@@ -250,6 +284,33 @@ def map_codes(
     Maps code values from a source to target value, within a DataFrame.
     The mapping process supports a "default" key in the code_map which is used to identify a default value to use
     if a mapping is not found.
+
+    Examples:
+
+    Internal data contract mapping
+        {
+          "name": "map_codes",
+          "params": {
+            "code_map": {
+              "sex": {
+                "default": "unknown",
+                "F": "female",
+                "M": "male",
+                "O": "other"
+              }
+            }
+          }
+        }
+
+    External mapping:
+        {
+          "name": "map_codes",
+          "params": {
+            "code_map": {
+              "sex": "sex.csv"
+            }
+          }
+        }
 
     :param data_frame: The input DataFrame
     :param code_map: The dictionary containing the mapping values or a filename that contains the mappings.

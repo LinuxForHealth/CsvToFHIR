@@ -116,8 +116,7 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
     <td>name<br>value</td>
     <td>
     
-    ```json
-    json
+    ```
     {
     "name": "add_constant",
     "params": {
@@ -126,9 +125,22 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
     }
     }
     ```
-    
+
     </td>
 </tr>
+<tr>
+   <td>
+   <pre>
+    {
+    "name": "add_constant",
+    "params": {
+    "name": "ssnSystem",
+    "value": "http://hl7.org/fhir/sid/us-ssn"
+    }
+    }
+   </pre>
+   </td>
+  </tr>
 </table>
 
 

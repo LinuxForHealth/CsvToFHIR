@@ -186,8 +186,12 @@ class EncounterResource:
     }
     diagnosis_use_display = {  # http://terminology.hl7.org/CodeSystem/diagnosis-role plus more from CDM
         "AD": "Admission diagnosis",
+        "DD": "Discharge diagnosis",
         "CC": "Chief complaint",
-        "principal-diagnosis": "Principal diagnosis"
+        "CM": "Comorbidity diagnosis",
+        "pre-op": "pre-op diagnosis",
+        "post-op": "post-op diagnosis",
+        "billing": "Billing"
     }
 
 

@@ -552,7 +552,7 @@ def expected_encounter_encounter_diagnosis2():
         "subject": {"reference": "Patient/112233"},
         "diagnosis": [
             {
-                "id": "AD-ABC123",
+                "id": "1",
                 "condition": {
                     "reference": "Condition/basic.resource.id",
                     "display": "ABC123"
@@ -560,47 +560,95 @@ def expected_encounter_encounter_diagnosis2():
                 "use": {
                     "coding": [
                         {
+                            "system": "http://ibm.com/fhir/cdm/CodeSystem/wh-diagnosis-use-type",
+                            "code": "billing",
+                            "display": "Billing"
+                        }
+                    ],
+                    "text": "Billing"
+                },
+                "rank": 1
+            }
+        ]
+    }
+
+
+@pytest.fixture
+def expected_encounter_encounter_diagnosis3():
+    return {
+        "resourceType": "Encounter",
+        "id": "encounter-123",
+        "identifier": [
+            {
+                "id": "PI.112233",
+                "type": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                            "code": "PI",
+                            "display": "Patient internal identifier"
+                        }
+                    ],
+                    "text": "Patient internal identifier"
+                },
+                "system": "urn:id:client",
+                "value": "112233"
+            },
+            {
+                "id": "VN.ENC.123",
+                "type": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                            "code": "VN",
+                            "display": "Visit number"
+                        }
+                    ],
+                    "text": "Visit number"
+                },
+                "system": "urn:id:client",
+                "value": "ENC.123"
+            },
+            {
+                "id": "RI.encounter-123",
+                "type": {
+                    "coding": [
+                        {
+                            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+                            "code": "RI",
+                            "display": "Resource identifier"
+                        }
+                    ],
+                    "text": "Resource identifier"
+                },
+                "system": "urn:id:client",
+                "value": "encounter_123"
+            },
+        ],
+        "status": "unknown",
+        "class": {
+            "system": "http://terminology.hl7.org/CodeSystem/data-absent-reason",
+            "code": "temp-unknown",
+            "display": "Temporarily Unknown"
+        },
+        "subject": {"reference": "Patient/112233"},
+        "diagnosis": [
+            {
+                "id": "ABC123",
+                "condition": {
+                    "reference": "Condition/basic.resource.id",
+                    "display": "ABC123"
+                },
+                "use": {
+                    "coding": [
+                        {
+                            "system": "http://ibm.com/fhir/cdm/CodeSystem/wh-diagnosis-use-type",
                             "code": "AD",
-                            "display": "Admission diagnosis",
-                            "system": "http://ibm.com/fhir/cdm/CodeSystem/wh-diagnosis-use-type"
+                            "display": "Admission diagnosis"
                         }
                     ],
                     "text": "Admission diagnosis"
                 }
-            },
-            {
-                "id": "CC-ABC123",
-                "condition": {
-                    "reference": "Condition/basic.resource.id",
-                    "display": "ABC123"
-                },
-                "use": {
-                    "coding": [
-                        {
-                            "code": "CC",
-                            "display": "Chief complaint",
-                            "system": "http://ibm.com/fhir/cdm/CodeSystem/wh-diagnosis-use-type"
-                        }
-                    ],
-                    "text": "Chief complaint"
-                },
-            },
-            {
-                "id": "principal-diagnosis-ABC123",
-                "condition": {
-                    "reference": "Condition/basic.resource.id",
-                    "display": "ABC123"
-                },
-                "use": {
-                    "coding": [
-                        {
-                            "code": "principal-diagnosis",
-                            "display": "Principal diagnosis",
-                            "system": "http://ibm.com/fhir/cdm/CodeSystem/wh-diagnosis-use-type"
-                        }
-                    ],
-                    "text": "Principal diagnosis"
-                },
             }
         ]
     }
@@ -885,9 +933,7 @@ def condition_record_encounter_diagnosis():
         "conditionSeverityCode": "severity.code",
         "conditionSeveritySystem": DEFAULT_CONDITION_SEVERITY_SYSTEM,
         "conditionSeverityText": "very severe",
-        "conditionPrincipalDiagnosis": "false",
-        "conditionRoleIsAdmitting": "f",
-        "conditionRoleIsChiefComplaint": "FALSE",
+        # no use or rank
         "conditionClinicalStatus": "active",
         "conditionVerificationStatus": "entered-in-error",
         "encounterClaimType": "PROFESSIONAL",
@@ -908,9 +954,27 @@ def condition_record_encounter_diagnosis2():
         "conditionCategory": "encounter-diagnosis",
         "conditionCode": "ABC123",
         "conditionCodeSystem": "urn:id:clientcode",
-        "conditionPrincipalDiagnosis": "true",
-        "conditionRoleIsAdmitting": "t",
-        "conditionRoleIsChiefComplaint": "TRUE",
+        "conditionDiagnosisUse": "billing",  # both use...
+        "conditionDiagnosisRank": 1,         # ... and rank.
+        "filePath": "/home/csv/input.csv",
+        "rowNum": 0
+    }
+
+
+@pytest.fixture
+def condition_record_encounter_diagnosis3():
+    # Tests different values for diagnosis role and principal diagnosis
+    return {
+        "patientInternalId": "112233",
+        "encounterInternalId": "encounter_123",
+        "encounterNumber": "ENC.123",
+        "resourceInternalId": "basic.resource.id",
+        "assigningAuthority": "urn:id:client",
+        "conditionCategory": "encounter-diagnosis",
+        "conditionCode": "ABC123",
+        "conditionCodeSystem": "urn:id:clientcode",
+        "conditionDiagnosisUse": "AD",  # use only
+        # no rank
         "filePath": "/home/csv/input.csv",
         "rowNum": 0
     }
@@ -1058,7 +1122,7 @@ def test_convert_condition_encounter_diagnosis2(
     assert fhir_record_encounter.identifier
     assert len(fhir_record_condition.identifier) == 4  # PI, RI, extID, VN
     assert len(fhir_record_encounter.identifier) == 3  # PI, RI, VN
-    assert len(fhir_record_encounter.diagnosis) == 3   # Admission diagnoisis, Chief complaint, Principal diagnosis
+    assert len(fhir_record_encounter.diagnosis) == 1   # Billing
 
     expected_resource_condition = Condition(**expected_condition_encounter_diagnosis2)
     exclude_regex = [r"root\['id'\]"]
@@ -1072,6 +1136,59 @@ def test_convert_condition_encounter_diagnosis2(
     assert diff == "", diff
 
     expected_resource_encounter = Encounter(**expected_encounter_encounter_diagnosis2)
+    exclude_regex = [r"root\['id'\]"]
+    diff = DeepDiff(
+        expected_resource_encounter.dict(),
+        fhir_record_encounter.dict(),
+        verbose_level=2,
+        exclude_regex_paths=exclude_regex,
+        ignore_order=True
+    ).pretty()
+    assert diff == "", diff
+
+
+# similar to test_convert_condition_encounter_diagnosis3, except conditionDiagnosisUse has no
+# conditionDiagnosisRank
+def test_convert_condition_encounter_diagnosis3(
+    condition_record_encounter_diagnosis3,
+    expected_condition_encounter_diagnosis2,  # Same condition as test_convert_condition_encounter_diagnosis2
+    expected_encounter_encounter_diagnosis3
+):
+    result_data: List = convert_record_condition(
+        "", condition_record_encounter_diagnosis3
+    )
+
+    assert len(result_data) == 2  # Encounter, Condition
+    try:
+        # loading into fhir.resource test validity of the object
+        fhir_record_encounter: Encounter = Encounter.parse_obj(result_data[0].dict())
+    except Exception:
+        assert False, "Invalid Encounter resource created"
+    try:
+        # loading into fhir.resource test validity of the object
+        fhir_record_condition: Condition = Condition.parse_obj(result_data[1].dict())
+    except Exception:
+        assert False, "Invalid  Condition resource created"
+    assert fhir_record_condition.resource_type == "Condition"
+    assert fhir_record_encounter.resource_type == "Encounter"
+    assert fhir_record_condition.identifier
+    assert fhir_record_encounter.identifier
+    assert len(fhir_record_condition.identifier) == 4  # PI, RI, extID, VN
+    assert len(fhir_record_encounter.identifier) == 3  # PI, RI, VN
+    assert len(fhir_record_encounter.diagnosis) == 1   # AD
+
+    expected_resource_condition = Condition(**expected_condition_encounter_diagnosis2)
+    exclude_regex = [r"root\['id'\]"]
+    diff = DeepDiff(
+        expected_resource_condition.dict(),
+        fhir_record_condition.dict(),
+        verbose_level=2,
+        ignore_order=True,
+        exclude_regex_paths=exclude_regex
+    ).pretty()
+    assert diff == "", diff
+
+    expected_resource_encounter = Encounter(**expected_encounter_encounter_diagnosis3)
     exclude_regex = [r"root\['id'\]"]
     diff = DeepDiff(
         expected_resource_encounter.dict(),

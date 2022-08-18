@@ -70,9 +70,8 @@ The Condition Dictionary Record contains the following fields:
 - conditionClinicalStatus
 - conditionVerificationStatus
 - conditionDiagnosisRank
-- conditionPrincipalDiagnosis
-- conditionRoleIsAdmitting
-- conditionRoleIsChiefComplaint
+- conditionDiagnosisUse
+
 - conditionRecordedDateTime
 - conditionOnsetDateTime
 - conditionAbatementDateTime

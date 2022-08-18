@@ -41,10 +41,8 @@ class ConditionCsv(CsvBaseModel):
 
     # only used when category=diagnosis-condition; not used for problem-list-item
     conditionDiagnosisRank: Optional[str]
-    # use / role(s) of the diagnosis in the encounter
-    conditionPrincipalDiagnosis: Optional[str]
-    conditionRoleIsAdmitting: Optional[str]
-    conditionRoleIsChiefComplaint: Optional[str]
+    # use of the diagnosis in the encounter
+    conditionDiagnosisUse: Optional[str]
 
     conditionCode: Optional[str]
     conditionCodeSystem: Optional[str] = DEFAULT_CONDITION_CODE_SYSTEM
@@ -77,8 +75,7 @@ class ConditionCsv(CsvBaseModel):
         # is no other Encounter data.  Note that if there is no encounterInternalId we do not create an Encounter
         # in this case, since not having an Encounter.id would result in an
         # 'orphaned' skeleton Encounter that is not useful.
-        if self.encounterInternalId or self.encounterClaimType or self.conditionRoleIsAdmitting or \
-           self.conditionRoleIsChiefComplaint or self.conditionDiagnosisRank:
+        if self.encounterInternalId or self.encounterClaimType or self.conditionDiagnosisUse or self.conditionDiagnosisRank:
             return True
         return False
 

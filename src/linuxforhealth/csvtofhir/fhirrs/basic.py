@@ -7,7 +7,7 @@ from fhir.resources.identifier import Identifier
 from fhir.resources.coding import Coding
 
 from linuxforhealth.csvtofhir.model.csv.basic import BasicCsv
-from linuxforhealth.csvtofhir.fhirutils import fhir_constants, fhir_identifier_utils, fhir_utils
+from linuxforhealth.csvtofhir.fhirutils import fhir_utils
 
 
 def convert_record(

@@ -689,7 +689,8 @@ def replace_text(
     :param data_frame: The input DataFrame
     :param column_name: The DataFrame column name.
     :param match: The string to match. Or pattern if REGEX option.
-    :param replacement: The string to replace it with.  Or pattern if REGEX option.
+    :param replacement: The string to replace it with, or pattern if REGEX option. Replacement must be a string. 
+        If need is to empty the cell, match on entire contents and replace with ''.
     :param options: optional string of options, defaults to None, which is match anywhere, case sensitive
         BEGIN = match at the beginning of the string. Can be combined with CASE_INSENSITIVE and/or END.
         END = match at the end of the word. Can be combined with CASE_INSENSITIVE and/or BEGIN.

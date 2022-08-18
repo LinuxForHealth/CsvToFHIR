@@ -114,7 +114,7 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 <tr>
 <td>add_constant</td>
 <td>Creates an additional column with constant value assigned</td>
-<td>name<br>value</td>
+<td><b>name:</b> constant name used as the new column name<br><b>value:</b> constant value</td>
 <td>
 <pre>
 {
@@ -128,12 +128,29 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 </td>
 </tr>
 <tr>
-<td>map_codes</td>
-<td>Maps 'codes' or values to a target representation.<br>
-map_codes supports inline mappings as a dictionary, and external mappings using a file name.<br>
-If a map of “default” is provided, any value that does not match another mapping key is given this value. 
+<td>format_date</td>
+<td>Formats date string values within a column to a target format.</td>
+<td><b>columns:</b>  the column name(s) to update<br
+><b>date_format:</b> the date format to apply to the column(s). Defaults to “%Y-%m-%d”</td>
+<td>
+<pre>
+{
+  "name": "format_date",
+  "params": {
+    "columns": [
+      "dateOfBirth"
+    ],
+    "date_format": "%Y-%m-%d"
+  }
+}
+</pre>
 </td>
-<td>code_map: Contains a mapping from source value to target value for a given set of fields or the name of a file which contains the mappings.</td>
+</tr>
+<tr>
+<td>map_codes</td>
+<td>Maps 'codes' values to a target representation.  map_codes supports inline mappings as a dictionary, and external mappings using a file name.  If a map of “default” is provided, any value that does not match another mapping key is given this value. 
+</td>
+<td><b>code_map:</b> Contains a mapping from source value to target value for a given set of fields or the name of a file which contains the mappings.</td>
 <td>
 Internal data contract mapping
 <pre>
@@ -167,7 +184,7 @@ External mapping:
 <tr>
 <td>rename_columns</td>
 <td>Renames a DataFrame’s columns</td>
-<td>column_map: A dictionary which maps the source column names to the target column names.</td>
+<td><b>column_map:</b> A dictionary which maps the source column names to the target column names.</td>
 <td>
 <pre>
 {

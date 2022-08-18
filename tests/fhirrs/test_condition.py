@@ -1147,7 +1147,7 @@ def test_convert_condition_encounter_diagnosis2(
     assert diff == "", diff
 
 
-# similar to test_convert_condition_encounter_diagnosis3, except conditionDiagnosisUse has no
+# similar to test_convert_condition_encounter_diagnosis2, except conditionDiagnosisUse has no
 # conditionDiagnosisRank
 def test_convert_condition_encounter_diagnosis3(
     condition_record_encounter_diagnosis3,

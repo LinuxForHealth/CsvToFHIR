@@ -164,19 +164,11 @@ def _connect_encoding_references(
                 diagnosis_id = code_cc.text
         enc.diagnosis = []
         rank = incoming_data.get_encounter_diagnosis_rank_int()
-        # Build Encounter.diagnosis elements, one entry per diagnosis.use
-        if incoming_data.conditionRoleIsAdmitting and \
-                incoming_data.conditionRoleIsAdmitting.lower() in csv_utils.TRUE_STRINGS:
-            diagnosis = _build_diagnosis_with_use("AD", rank, diagnosis_id, condition_reference)
+        # Build Encounter.diagnosis element for diagnosis.use
+        if incoming_data.conditionDiagnosisUse:
+            diagnosis = _build_diagnosis_with_use(incoming_data.conditionDiagnosisUse, rank, diagnosis_id, condition_reference)
             enc.diagnosis.append(diagnosis)
-        if incoming_data.conditionRoleIsChiefComplaint and \
-                incoming_data.conditionRoleIsChiefComplaint.lower() in csv_utils.TRUE_STRINGS:
-            diagnosis = _build_diagnosis_with_use("CC", rank, diagnosis_id, condition_reference)
-            enc.diagnosis.append(diagnosis)
-        if incoming_data.conditionPrincipalDiagnosis and \
-                incoming_data.conditionPrincipalDiagnosis.lower() in csv_utils.TRUE_STRINGS:
-            diagnosis = _build_diagnosis_with_use("principal-diagnosis", rank, diagnosis_id, condition_reference)
-            enc.diagnosis.append(diagnosis)
+
         if not len(enc.diagnosis):  # no dianosis.use values, add single diagnosis element without 'use'
             diagnosis = EncounterDiagnosis.construct(
                 id=diagnosis_id,
@@ -204,10 +196,7 @@ def _build_diagnosis_with_use(use_code: str, rank: int, id: str, condition_refer
         condition=condition_reference
     )
     # Set diagnosis.id
-    if rank:  # rank is first choice
-        diagnosis.id = id
-    else:     # role hyphen Condition.code is second choice
-        diagnosis.id = use_code + "-" + id
+    diagnosis.id = id
     return diagnosis
 
 

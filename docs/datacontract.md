@@ -115,32 +115,17 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
     <td>Creates an additional column with constant value assigned</td>
     <td>name<br>value</td>
     <td>
-    
-    ```
-    {
-    "name": "add_constant",
-    "params": {
-    "name": "ssnSystem",
-    "value": "http://hl7.org/fhir/sid/us-ssn"
-    }
-    }
-    ```
-
+      <pre>
+      {
+        "name": "add_constant",
+        "params": {
+          "name": "ssnSystem",
+          "value": "http://hl7.org/fhir/sid/us-ssn"
+        }
+      }
+   </pre>
     </td>
 </tr>
-<tr>
-   <td>
-   <pre>
-    {
-    "name": "add_constant",
-    "params": {
-    "name": "ssnSystem",
-    "value": "http://hl7.org/fhir/sid/us-ssn"
-    }
-    }
-   </pre>
-   </td>
-  </tr>
 </table>
 
 

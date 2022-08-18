@@ -126,6 +126,44 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
    </pre>
     </td>
 </tr>
+<tr>
+    <td>map_codes</td>
+    <td>Maps 'codes' or values to a target representation.<br>
+        map_codes supports inline mappings as a dictionary, and external mappings using a file name.<br>
+        If a map of “default” is provided, any value that does not match another mapping key is given this value. 
+    </td>
+    <td>code_map: Contains a mapping from source value to target value for a given set of fields or the name of a file which contains the mappings.</td>
+    <td>
+      Internal data contract mapping
+      <pre>
+      {
+        "name": "map_codes",
+        "params": {
+          "code_map": {
+            "sex": {
+              "default": "unknown",
+              "F": "female",
+              "M": "male",
+              "O": "other"
+            }
+         }
+        }
+      }
+      </pre>
+      External mapping:
+      <pre>
+      {
+        "name": "map_codes",
+        "params": {
+          "code_map": {
+            "sex": "sex.csv"
+          }
+        }
+      }
+      </pre>
+    </td>
+</tr>
+
 </table>
 
 

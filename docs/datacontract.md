@@ -114,11 +114,19 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
     <td>add_constant</td>
     <td>Creates an additional column with constant value assigned</td>
     <td>name<br>value</td>
-    <td>"name": "add_constant",<br>
-          "params": {<br>
-            "name": "ssnSystem",<br>
-            "value": "http://hl7.org/fhir/sid/us-ssn"<br>
-          }<br>
+    <td>
+    
+    ```json
+    json
+    {
+    "name": "add_constant",
+    "params": {
+    "name": "ssnSystem",
+    "value": "http://hl7.org/fhir/sid/us-ssn"
+    }
+    }
+    ```
+    
     </td>
 </tr>
 </table>

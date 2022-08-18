@@ -13,6 +13,7 @@ from linuxforhealth.csvtofhir.config import get_converter_config
 from linuxforhealth.csvtofhir.support import read_csv
 # Do not remove, required for _build_status_history task
 from linuxforhealth.csvtofhir.model.csv.encounter import EncounterStatusHistoryEntry
+from linuxforhealth.csvtofhir.model.csv.basic import TokenDetails
 
 logger = support.get_logger(__name__)
 

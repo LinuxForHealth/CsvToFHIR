@@ -21,9 +21,11 @@ from linuxforhealth.csvtofhir.fhirrs.patient import convert_record as convert_pa
 from linuxforhealth.csvtofhir.fhirrs.practitioner import convert_record as convert_practitioner
 from linuxforhealth.csvtofhir.fhirrs.procedure import convert_record as convert_procedure
 from linuxforhealth.csvtofhir.fhirrs.unstructured import convert_record as convert_unstructured
+from linuxforhealth.csvtofhir.fhirrs.basic import convert_record as convert_basic
 
 conversion_by_resource = {
     "AllergyIntolerance": convert_allergy_intolerance,
+    "Basic": convert_basic,
     "Condition": convert_condition,
     "DiagnosticReport": convert_diagnostic_report,
     "DocumentReference": convert_document_reference,

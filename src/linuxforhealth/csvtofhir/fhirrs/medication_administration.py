@@ -18,5 +18,4 @@ def convert_record(
         record["resourceType"] = RESOURCE_TYPE_MED_ADMINISTRATION
     else:
         record["resourceType"] = RESOURCE_TYPE_MED_STATEMENT
-        record["medicationUseStatus"] = MEDICATION_STATEMENT_DEFAULT_STATUS
     return medication_use.convert_record(group_by_key, record, resource_meta)

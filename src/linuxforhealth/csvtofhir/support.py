@@ -22,6 +22,20 @@ def find_fhir_resources(resources: List, resource_type: str) -> List[Dict]:
     return matches
 
 
+def get_fhir_resource_types(resources: List) -> List[str]:
+    """
+    Returns resource types from a list
+    :param resources: List of resources
+    :return: List of resource types
+    """
+    retVal = []
+    for result in resources:
+        resource = json.loads(result)
+        retVal.append(resource.get("resourceType", ""))
+
+    return retVal
+
+
 def read_csv(filepath: str) -> Dict:
     """
     Reads a csv file and converts to Dict
@@ -49,6 +63,7 @@ def get_logger(name):
     """
     logger = logging.getLogger(name)
     logger.addHandler(NullHandler())
+    logger.setLevel(logging.INFO)
 
     # uncomment the lines below to enable local environment logging
 

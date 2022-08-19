@@ -179,7 +179,7 @@ def expected_rs_medication_statement_missing_values():
                 "value": "MELATONIN5 MG"
             }
         ],
-        "status": "unknown",
+        "status": "in-progress",
         "medicationCodeableConcept": {"text": "MELATONIN5 MG"},
         "subject": {"reference": "Patient/111-M1111"},
         "context": {"reference": "Encounter/111-E1111"}

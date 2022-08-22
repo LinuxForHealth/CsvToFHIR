@@ -69,7 +69,7 @@ def get_logger(name):
 
     # from logging import StreamHandler
     # logger.setLevel(logging.DEBUG)
-    # stream_handler = StreamHandler()
+    # stream_handler = logging.StreamHandler()
     # stream_handler.setLevel(logging.DEBUG)
     #
     # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

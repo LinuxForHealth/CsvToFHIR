@@ -136,20 +136,20 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
         try:
             processing_exception: Optional[Exception] = None
             result: List[str] = []
-            logger.info((f"Converting row {row.rowNum} groupByKey={row.groupByKey} file_path={row.filePath} ") \
-                      + (f"resourceType={row.configResourceType}"))
+            logger.debug((f"Converting groupByKey={row.groupByKey} resourceType={row.configResourceType}"))
+            logger.info((f"Converting row {row.rowNum} file_path={row.filePath} "))
             result = convert_to_fhir(
                 row.groupByKey,
                 row.to_dict(),
                 _append_row_num_to_file_meta(
                     resource_meta,
                     row.rowNum))
-            logger.info(f"Finished Converting row {row.rowNum} groupByKey={row.groupByKey} file_path={row.filePath} " \
-                        + (f"resourceType={row.configResourceType}.  The following resourceTypes were created: ") \
+            logger.info(f"Finished converting row {row.rowNum} file_path={row.filePath} " \
+                        + ("  The following resourceTypes were created: ") \
                         + ', '.join(support.get_fhir_resource_types(result)))
         except Exception as ex:
             logger.error(f"Convert failed with {ex.__class__.__name__} Error on converting row {row.rowNum} " \
-                         + (f"groupByKey={row.groupByKey} file_path={row.filePath} resourceType={row.configResourceType}"))
+                         + (f"file_path={row.filePath}"))
             processing_exception = ex
 
         return processing_exception, row.groupByKey, result

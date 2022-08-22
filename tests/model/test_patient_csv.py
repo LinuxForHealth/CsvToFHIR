@@ -39,4 +39,4 @@ def test_patient_system_defaults():
     }
     patient: PatientCsv = PatientCsv.parse_obj(pat_dictionary)
     patient.raceSystem = "http://terminology.hl7.org/CodeSystem/v3-Race"
-    patient.ethnicitySystem = "http://terminology.hl7.org/CodeSystem/v2-0189"
+    patient.ethnicitySystem = "http://terminology.hl7.org/CodeSystem/v3-Ethnicity"

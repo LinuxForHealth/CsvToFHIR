@@ -136,9 +136,9 @@ def format_test_patient_record() -> Dict:
         "race": "UNK",
         "raceSystem": "http://terminology.hl7.org/CodeSystem/v3-NullFlavor",
         "raceText": "998",
-        "ethnicity": "H",
-        "ethnicitySystem": "urn:oid:2.16.840.1.113883.6.238",
-        "ethnicityText": "613",
+        "ethnicity": "2135-2",
+        "ethnicitySystem": "http://terminology.hl7.org/CodeSystem/v3-Ethnicity",
+        "ethnicityText": "Hispanic",
         "resourceType": "Patient",
         "deceasedBoolean": "False",
         "ageInWeeksForAgeUnder2Years": "69",
@@ -171,12 +171,12 @@ def format_test_patient_expected():
                 "valueCodeableConcept": {
                     "coding": [
                         {
-                            "system": "urn:oid:2.16.840.1.113883.6.238",
+                            "system": "http://terminology.hl7.org/CodeSystem/v3-Ethnicity",
                             "display": "Hispanic or Latino",
-                            "code": "H"
+                            "code": "2135-2"
                         }
                     ],
-                    "text": "613"
+                    "text": "Hispanic"
                 }
             },
             {

@@ -89,7 +89,7 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
  "comment": "adds a default ethnic system code to the source data",
  "params": {
     "name": "ethnicitySystem",
-    "value": "http://terminology.hl7.org/CodeSystem/v2-0189"
+    "value": "http://terminology.hl7.org/CodeSystem/v3-Ethnicity"
  }
 }
 ```

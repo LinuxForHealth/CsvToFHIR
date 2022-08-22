@@ -38,7 +38,7 @@ class SystemConstants:
     # FYI: Discharge Disposition HL7 standard uses numeric values "http://terminology.hl7.org/CodeSystem/v2-0112"
     DISCHARGE_DISPOSITION_SYSTEM = "http://terminology.hl7.org/CodeSystem/discharge-disposition"
     ENCOUNTER_CLASS_CODING_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-ActCode"
-    ETHNICITY_SYSTEM = "http://terminology.hl7.org/CodeSystem/v2-0189"
+    ETHNICITY_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-Ethnicity"
     INCIDENT_CODE_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-ActCode"
     LOCATION_TYPE_SYSTEM = "http://terminology.hl7.org/CodeSystem/v3-RoleCode"
     MED_ADM_CATEGORY_SYSTEM = "http://terminology.hl7.org/CodeSystem/medication-admin-category"
@@ -299,8 +299,9 @@ class PatientResource:
         "2129-5": "Arab",
         "2131-1": "Other Race"
     }
-    ethnicity_display = {
-        "H": "Hispanic or Latino"
+    ethnicity_display = { #http://terminology.hl7.org/CodeSystem/v3-Ethnicity
+        "2135-2": "Hispanic or Latino",
+        "2186-5": "Not Hispanic or Latino"
     }
 
 

@@ -72,7 +72,7 @@ the parameters/arguments `name` and `value`:
           "name": "add_constant",
           "params": {
             "name": "ethnicitySystem",
-            "value": "http://terminology.hl7.org/CodeSystem/v2-0189"
+            "value": "http://terminology.hl7.org/CodeSystem/v3-Ethnicity"
           }
         },
       { etc }

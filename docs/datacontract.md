@@ -177,10 +177,42 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
   </tr>
   <tr>
     <td>conditional_column</td>
-    <td></td>
-    <td></td>
+    <td> Creates a new column by mapping the values from a source column to a target value.  Supports inline mappings as a dictionary, and external mappings using a file name.<br><br>If mapping not found:<br>
+          <b>"default": value</b> will be used if present<br>
+          otherwise leave existing value from source
+    </td>
+    <td><b>source_column:</b> The source column for the new conditional column
+    <b>condition_map:</b> Maps values from the source column to the desired target values or a filename that contains the mappings.
+    <b>target_column:</b> The new target column</td>
     <td>
+      Inline mapping:
       <pre>
+{
+  "name": "conditional_column",
+  "params": {
+    "source_column": "raceText",
+    "target_column": "raceCode",
+    "condition_map": {
+      "american indian": "1002-5",
+      "asian": "2028-9",
+      "black": "2054-5",
+      "pacific islander": "2076-8",
+      "white": "2106-3",
+      "default": "2131-1"
+    }
+  }
+}
+      </pre>
+      External file map:
+      <pre>
+{
+  "name": "conditional_column",
+  "params": {
+    "source_column": "raceText",
+    "target_column": "raceCode",
+    "condition_map": "race.csv"
+  }
+}
       </pre>
     </td>
   </tr>
@@ -213,8 +245,11 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
   </tr>
   <tr>
     <td>copy_columns</td>
-    <td></td>
-    <td></td>
+    <td>Copies one or more source columns to a target column.</td>
+    <td>
+      <b>columns:</b> List of column(s) to copy<br>
+      <b>target_column:</b> Name of column to be created<br>
+      <b>value_separator:</b> Character to be used when mutliple columns are concatenated.Defaults to a " ".
     <td>
       <pre>
       </pre>
@@ -354,10 +389,27 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
   </tr>
   <tr>
     <td>split_row</td>
-    <td></td>
-    <td></td>
+    <td>
+    Splits a record “row” on a column or columns, creating N additional rows for each column included within the split operation. Creates additional columns for the “label” and “value”.</td>
+    <td>
+      <b>columns:</b> The column(s) to split on<br>
+      <b>split_column_name:</b> The column name or header used for the "label" column<br>
+      <b>split_value_column_name:</b> The column name or header used for the "value" column
+    </td>
     <td>
       <pre>
+{
+  "name": "split_row",
+  "params": {
+    "columns": [
+      "height",
+      "weight",
+      "bmi"
+    ],
+    "split_column_name": "observationCodeText",
+    "split_value_column_name": "observationValue"
+  }
+}
       </pre>
     </td>
   </tr>

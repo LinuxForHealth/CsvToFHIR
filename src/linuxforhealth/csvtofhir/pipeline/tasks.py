@@ -349,6 +349,20 @@ def split_row(
     """
     Splits DataFrame rows on the specified column(s) creating two new columns for the column name and value.
 
+    Example:
+    {
+      "name": "split_row",
+      "params": {
+        "columns": [
+          "height",
+          "weight",
+          "bmi"
+        ],
+        "split_column_name": "observationCodeText",
+        "split_value_column_name": "observationValue"
+      }
+    }
+
     :param data_frame: The input DataFrame
     :param columns: The column(s) to split on
     :param split_column_name: The column name used for the split column
@@ -387,6 +401,34 @@ def conditional_column(
     If mapping not found:
           "default": <value> will be used if present
           otherwise leave existing value from source
+
+    Examples:
+        Inline mapping:
+        {
+          "name": "conditional_column",
+          "params": {
+            "source_column": "raceText",
+            "target_column": "raceCode",
+            "condition_map": {
+              "american indian": "1002-5",
+              "asian": "2028-9",
+              "black": "2054-5",
+              "pacific islander": "2076-8",
+              "white": "2106-3",
+              "default": "2131-1"
+            }
+          }
+        }
+
+        External file map:
+        {
+          "name": "conditional_column",
+          "params": {
+            "source_column": "raceText",
+            "target_column": "raceCode",
+            "condition_map": "race.csv"
+          }
+        }
 
     :param data_frame: The input DataFrame
     :param source_column: The source column for the new conditional column
@@ -689,7 +731,7 @@ def replace_text(
     :param data_frame: The input DataFrame
     :param column_name: The DataFrame column name.
     :param match: The string to match. Or pattern if REGEX option.
-    :param replacement: The string to replace it with, or pattern if REGEX option. Replacement must be a string. 
+    :param replacement: The string to replace it with, or pattern if REGEX option. Replacement must be a string.
         If need is to empty the cell, match on entire contents and replace with ''.
     :param options: optional string of options, defaults to None, which is match anywhere, case sensitive
         BEGIN = match at the beginning of the string. Can be combined with CASE_INSENSITIVE and/or END.

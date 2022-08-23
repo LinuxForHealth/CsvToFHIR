@@ -136,7 +136,7 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
         try:
             processing_exception: Optional[Exception] = None
             result: List[str] = []
-            # if there is no NoGroupByKey (groupByKey in the data contract set to "None") then
+            # if there is no groupByKey (groupByKey in the data contract set to "None") then
             # place the output into a bucket called "NoGroupByKey"
             groupByKey = "NoGroupByKey"
             if "groupByKey" in row:

@@ -17,6 +17,10 @@ def convert_record(
 
     incoming_data: BasicCsv = BasicCsv.parse_obj(record)
     
+    resource_id = None
+    if incoming_data.patientInternalIdentifier != None and incoming_data.patientInternalIdentifier != "":
+        resource_id = "patient-tokens." + incoming_data.patientInternalIdentifier
+    
     # Create patient-tokens coding   
     # "code": {
     #    "coding": [
@@ -47,46 +51,46 @@ def convert_record(
             token_name = tokens[0]
             token_value = tokens[1]
             token_system = tokens[2]
-            token_id = "merative." + token_name
+            token_id = incoming_data.identifierNamePrefix + "." + token_name
             
             identifier = _build_token_identifier(token_id, token_value, token_system, token_cc_system)
             identifierList.append(identifier)
-        
-    # create extra token identifer - NYSIIS_Legacy_Hash (if present)
-    if incoming_data.NYSIIS_Legacy_Hash != None and incoming_data.NYSIIS_Legacy_Hash != "":
-        identifier = _build_token_identifier("NYSIIS_Legacy_Hash", incoming_data.NYSIIS_Legacy_Hash, incoming_data.baseSystem, token_cc_system)
-        identifierList.append(identifier)
-    
-    # create extra token identifer - STD_SSN_Hash (if present)
-    if incoming_data.STD_SSN_Hash != None and incoming_data.STD_SSN_Hash != "":
-        identifier = _build_token_identifier("STD_SSN_Hash",incoming_data.STD_SSN_Hash, incoming_data.baseSystem, token_cc_system)
-        identifierList.append(identifier)
-    
+          
     # create other identifier - tokenized_sid
     if incoming_data.tokenized_sid != None and incoming_data.tokenized_sid != "":
-        identifier = _build_other_identifier("tokenized_sid", incoming_data.tokenized_sid, incoming_data.baseSystem)
+        identifier_id = incoming_data.identifierNamePrefix + ".tokenized_sid"
+        identifier = _build_other_identifier(identifier_id, incoming_data.tokenized_sid, incoming_data.baseSystem, incoming_data.identifierNamePrefix)
         identifierList.append(identifier)
         
     # create other identifier - token_encryption_key
     if incoming_data.token_encryption_key != None and incoming_data.token_encryption_key != "":
-        identifier = _build_other_identifier("token_encryption_key", incoming_data.token_encryption_key, incoming_data.baseSystem)
+        identifier_id = incoming_data.identifierNamePrefix + ".token_encryption_key"
+        identifier = _build_other_identifier(identifier_id, incoming_data.token_encryption_key, incoming_data.baseSystem, incoming_data.identifierNamePrefix)
         identifierList.append(identifier)
         
     # create other identifier - source_patient_sid
     if incoming_data.source_patient_sid != None and incoming_data.source_patient_sid != "":
-        identifier = _build_other_identifier("source_patient_sid", incoming_data.tokenized_sid, incoming_data.baseSystem)
+        identifier_id = incoming_data.identifierNamePrefix + ".source_patient_sid"
+        identifier = _build_other_identifier(identifier_id, incoming_data.tokenized_sid, incoming_data.baseSystem, incoming_data.identifierNamePrefix)
         identifierList.append(identifier)
         
-    # create other identifier - sid
-    if incoming_data.sid != None and incoming_data.sid != "":
-        identifier = _build_other_identifier("sid", incoming_data.sid, incoming_data.baseSystem)
+    # create other identifier - explorys_sid
+    if incoming_data.explorys_sid != None and incoming_data.explorys_sid != "":
+        identifier_id = incoming_data.identifierNamePrefix + ".explorys_sid"
+        identifier = _build_other_identifier(identifier_id, incoming_data.explorys_sid, incoming_data.baseSystem,  incoming_data.identifierNamePrefix)
         identifierList.append(identifier)
         
+     # Use local copy of resource_meta so changes do not affect other resources
+     # Passing in none for the source record id because it is not applicable here
+    resource_meta_copy = fhir_utils.add_source_record_id_return_meta_copy(
+        None, resource_meta)
+    
     # create basic fhir resource with an id if patientInternalIdentifier is present
     fhir_resource: Basic = Basic.construct(
-        id="patient-tokens." + incoming_data.patientInternalIdentifier if incoming_data.patientInternalIdentifier != None and incoming_data.patientInternalIdentifier != "" else None,
+        id=resource_id,
         code=code_cc,
-        identifier=identifierList
+        identifier=identifierList,
+        meta=resource_meta_copy
     )
     
     # Add patient subject link if the patientInternalIdentifier is present
@@ -119,7 +123,7 @@ def convert_record(
 #     },
 #     "value": "<value>"
 # }
-def _build_other_identifier(name, value, system):
+def _build_other_identifier(name, value, system, prefix):
     
         identifier_type_cc = Coding.construct(
             system=system,
@@ -127,7 +131,7 @@ def _build_other_identifier(name, value, system):
         )
                 
         identifier = Identifier.construct(
-            id="merative." + name,
+            id=prefix + "." + name,
             value=str(value),
             system=system,
             type=identifier_type_cc

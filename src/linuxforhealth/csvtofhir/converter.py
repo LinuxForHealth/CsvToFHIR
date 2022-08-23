@@ -136,11 +136,16 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
         try:
             processing_exception: Optional[Exception] = None
             result: List[str] = []
-            log_message = (f"Converting row {row.rowNum} groupByKey={row.groupByKey} file_path={row.filePath} " +
+            # if there is no NoGroupByKey (groupByKey in the data contract set to "None") then
+            # place the output into a bucket called "NoGroupByKey"
+            groupByKey = "NoGroupByKey"
+            if "groupByKey" in row:
+                groupByKey = row.groupByKey
+            log_message = (f"Converting row {row.rowNum} groupByKey={groupByKey} file_path={row.filePath} " +
                            "resourceType={row.configResourceType}")
             logger.debug(log_message)
             result = convert_to_fhir(
-                row.groupByKey,
+                groupByKey,
                 row.to_dict(),
                 _append_row_num_to_file_meta(
                     resource_meta,
@@ -149,7 +154,7 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
             logger.error(f"Convert failed with {ex.__class__.__name__} Error")
             processing_exception = ex
 
-        return processing_exception, row.groupByKey, result
+        return processing_exception, groupByKey, result
 
     # load DataContract and FileDefinition
     contract: DataContract = validate_contract()

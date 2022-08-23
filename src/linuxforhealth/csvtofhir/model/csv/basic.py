@@ -16,6 +16,7 @@ class TokenDetails(BaseModel):
 class BasicCsv(CsvBaseModel):
     identifierTypeSystem: Optional[str]        # system for token identifiers
     baseSystem: Optional[str]                  # base system
+    identifierNamePrefix: Optional[str]        # prefix for identifier ids
     tokenList: Optional[List[str]]             # token identifiers
     patientInternalIdentifier: Optional[str]   # id
     # datavant
@@ -24,6 +25,4 @@ class BasicCsv(CsvBaseModel):
     source_patient_sid: Optional[str]          # other identifier
     created_date: Optional[str]                # subject
     # explorys
-    sid: Optional[str]                         # other identifier
-    NYSIIS_Legacy_Hash: Optional[str]          # token identifier
-    STD_SSN_Hash: Optional[str]                # token identifier
+    explorys_sid: Optional[str]                # other identifier

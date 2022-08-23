@@ -27,7 +27,7 @@ class ConverterDefinitionLookupException(Exception):
 
 def validate_contract() -> DataContract:
     """
-    Validates the converter's data contract
+    Validates the converter's data contract.
     :return: the DataContract model
     :raise: FileNotFoundError if the data contract configuration file is not found.
     :raise ValidationError if the data contract is not valid.

@@ -136,13 +136,13 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
         try:
             processing_exception: Optional[Exception] = None
             result: List[str] = []
-            logger.debug((f"Converting groupByKey={row.groupByKey} resourceType={row.configResourceType}"))
-            logger.info((f"Converting row {row.rowNum} file_path={row.filePath} "))
             # if there is no groupByKey (groupByKey in the data contract set to "None") then
             # place the output into a bucket called "NoGroupByKey"
             groupByKey = "NoGroupByKey"
             if "groupByKey" in row:
                 groupByKey = row.groupByKey
+            logger.debug((f"Converting groupByKey={groupByKey} resourceType={row.configResourceType}"))
+            logger.info((f"Converting row {row.rowNum} file_path={row.filePath} "))
             log_message = (f"Converting row {row.rowNum} groupByKey={groupByKey} file_path={row.filePath} " +
                            "resourceType={row.configResourceType}")
             logger.debug(log_message)

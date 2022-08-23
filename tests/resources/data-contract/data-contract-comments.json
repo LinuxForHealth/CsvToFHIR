@@ -47,6 +47,15 @@
           }
         },
         {
+          "name": "map_codes",
+          "comment": "Maps state to abbreviation",
+          "params": {
+            "code_map": {
+              "state": "states.csv"
+            }
+          }
+        },
+        {
           "name": "rename_columns",
           "comment": "Renames columns to the standard dictionary names",
           "params": {

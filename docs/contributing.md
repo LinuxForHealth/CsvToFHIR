@@ -50,3 +50,6 @@ See the [MAINTAINERS.md](../CODEOWNERS) page.
 ## Testing
 To ensure a working build, please run the full build from the root of the project before submitting your pull request.
 Pull Requests should include necessary updates to unit tests within the [tests package](../tests).
+
+## Documentation
+Markdown is preferred for tables in the documentation.  HTML can be used for complex table needs.

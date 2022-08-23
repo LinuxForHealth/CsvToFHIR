@@ -18,11 +18,12 @@ def test_parse(data_contract_model: DataContract):
     ]
     result: List[Callable] = parse(file_definition.tasks)
 
-    assert len(result) == 4
+    assert len(result) == 5
 
     expected_functions = [
         "add_constant",  # ssnSystem
         "format_date",
+        "map_codes",
         "map_codes",
         "rename_columns"
     ]

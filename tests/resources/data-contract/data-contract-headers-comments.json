@@ -38,6 +38,9 @@
         },
         {
           "ssn": "the patient ssn"
+        },
+        {
+          "state": "state patient resides in"
         }
       ],
       "tasks": [
@@ -69,6 +72,15 @@
                 "M": "male",
                 "O": "other"
               }
+            }
+          }
+        },
+        {
+          "name": "map_codes",
+          "comment": "Maps state to abbreviation",
+          "params": {
+            "code_map": {
+              "state": "states.csv"
             }
           }
         }

@@ -39,7 +39,7 @@ def test_add_constant(input_data_frame: DataFrame, expected_data_frame: DataFram
     :param expected_data_frame: The expected data frame, used for comparisons
     """
     expected_data_frame["ethnicitySystem"] = [
-        "http://terminology.hl7.org/CodeSystem/v2-0189"
+        "http://terminology.hl7.org/CodeSystem/v3-Ethnicity"
     ]
     expected_data_frame["raceSystem"] = [
         "http://terminology.hl7.org/CodeSystem/v3-Race"
@@ -48,7 +48,7 @@ def test_add_constant(input_data_frame: DataFrame, expected_data_frame: DataFram
     result: DataFrame = add_constant(
         input_data_frame,
         "ethnicitySystem",
-        "http://terminology.hl7.org/CodeSystem/v2-0189"
+        "http://terminology.hl7.org/CodeSystem/v3-Ethnicity"
     )
     result: DataFrame = add_constant(
         result, "raceSystem", "http://terminology.hl7.org/CodeSystem/v3-Race"
@@ -417,7 +417,7 @@ def test_conditional_column_task_with_filename(monkeypatch, converter_config):
     """
     monkeypatch.setattr(tasks, "get_converter_config", lambda: converter_config)
 
-    condition_map = "states.csv"
+    condition_map = "zip_states.csv"
 
     input_data_frame = DataFrame()
     expected_data_frame = DataFrame()

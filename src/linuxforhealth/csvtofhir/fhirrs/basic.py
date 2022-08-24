@@ -46,7 +46,7 @@ def convert_record(
     if incoming_data.tokenList:
         for token in incoming_data.tokenList:
             # tokenList list items are in the form of 
-            # ["token_name^<token_value>^system", "token_name^<token_value>^system", token_name^<token_value>^system"]
+            # ["token_name^token_value^system", "token_name^token_value^system", token_name^token_value^system"]
             tokens = token.split("^")
             token_name = tokens[0]
             token_value = tokens[1]
@@ -55,33 +55,22 @@ def convert_record(
             
             identifier = _build_token_identifier(token_id, token_value, token_system, token_cc_system)
             identifierList.append(identifier)
-          
-    # create other identifier - tokenized_sid
-    if incoming_data.tokenized_sid != None and incoming_data.tokenized_sid != "":
-        identifier_id = incoming_data.identifierNamePrefix + ".tokenized_sid"
-        identifier = _build_other_identifier(identifier_id, incoming_data.tokenized_sid, incoming_data.baseSystem, incoming_data.identifierNamePrefix)
-        identifierList.append(identifier)
-        
-    # create other identifier - token_encryption_key
-    if incoming_data.token_encryption_key != None and incoming_data.token_encryption_key != "":
-        identifier_id = incoming_data.identifierNamePrefix + ".token_encryption_key"
-        identifier = _build_other_identifier(identifier_id, incoming_data.token_encryption_key, incoming_data.baseSystem, incoming_data.identifierNamePrefix)
-        identifierList.append(identifier)
-        
-    # create other identifier - source_patient_sid
-    if incoming_data.source_patient_sid != None and incoming_data.source_patient_sid != "":
-        identifier_id = incoming_data.identifierNamePrefix + ".source_patient_sid"
-        identifier = _build_other_identifier(identifier_id, incoming_data.tokenized_sid, incoming_data.baseSystem, incoming_data.identifierNamePrefix)
-        identifierList.append(identifier)
-        
-    # create other identifier - explorys_sid
-    if incoming_data.explorys_sid != None and incoming_data.explorys_sid != "":
-        identifier_id = incoming_data.identifierNamePrefix + ".explorys_sid"
-        identifier = _build_other_identifier(identifier_id, incoming_data.explorys_sid, incoming_data.baseSystem,  incoming_data.identifierNamePrefix)
-        identifierList.append(identifier)
-        
-     # Use local copy of resource_meta so changes do not affect other resources
-     # Passing in none for the source record id because it is not applicable here
+            
+    if incoming_data.otherIdentifierList:
+        for other in incoming_data.otherIdentifierList:
+            # otherIdentifierList list items are in the form of 
+            # ["name^value^system", "name^value^system", name^value^system"]
+            parts = other.split("^")
+            name = parts[0]
+            value = parts[1]
+            system = parts[2]
+            id = incoming_data.identifierNamePrefix + "." + name
+            
+            identifier = _build_other_identifier(id, name, value, system)
+            identifierList.append(identifier)
+                  
+    # Use local copy of resource_meta so changes do not affect other resources
+    # Passing in none for the source record id because it is not applicable here
     resource_meta_copy = fhir_utils.add_source_record_id_return_meta_copy(
         None, resource_meta)
     
@@ -103,7 +92,9 @@ def convert_record(
     
     # Add created date if it's present
     if incoming_data.created_date != None and incoming_data.created_date  != "":
-        fhir_resource.created = fhir_utils.get_datetime(incoming_data.created_date)
+        time_part_index = incoming_data.created_date.index(" ")
+        created_date = incoming_data.created_date[0:time_part_index]
+        fhir_resource.created = fhir_utils.get_date(created_date)
 
     resources.append(fhir_resource)
     return resources
@@ -111,8 +102,8 @@ def convert_record(
 
 # Builds a non token identifier
 # { 
-#     "id": "<base system>.<code>",    	  # eg "merative.explorys-sid", "datavant.token_encryption_key"
-#     "system": "urn:id:merative",          # or "urn:id:datavant"
+#     "id": <id>
+#     "system": <system>
 #     "type": {
 #         "coding": [
 #             {
@@ -123,15 +114,15 @@ def convert_record(
 #     },
 #     "value": "<value>"
 # }
-def _build_other_identifier(name, value, system, prefix):
+def _build_other_identifier(id, name, value, system):
     
         identifier_type_cc = Coding.construct(
             system=system,
-            code=name,
+            code=name
         )
                 
         identifier = Identifier.construct(
-            id=prefix + "." + name,
+            id=id,
             value=str(value),
             system=system,
             type=identifier_type_cc
@@ -141,8 +132,8 @@ def _build_other_identifier(name, value, system, prefix):
         
 # Builds a token identifier
 # {
-#     "id": "<base system>.<token name>",    # eg "merative.explorys-nysiis", "merative.explorys-ssn", "datavant.token1"
-#     "system": "urn:id:merative",           # or "urn:id:datavant"
+#     "id": <id>
+#     "system": <system>
 #     "type": {
 #         "coding": [
 #             {

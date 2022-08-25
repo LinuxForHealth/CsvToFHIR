@@ -5,6 +5,7 @@ import pandas as pd
 from fhir.resources.meta import Meta
 from numpy import integer
 from pandas import DataFrame, Series
+from linuxforhealth.csvtofhir.model.contract import FileType
 
 from linuxforhealth.csvtofhir import support
 from linuxforhealth.csvtofhir.config import ConverterConfig, get_converter_config
@@ -175,9 +176,13 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
     chunk_tasks = _create_processing_tasks(contract.general, file_definition, file_path)
     csv_reader_params = build_csv_reader_params(get_converter_config(), contract.general, file_definition)
 
-    with pd.read_csv(file_path, **csv_reader_params) as buffer:
-        for chunk in buffer:
+    if file_definition.fileType == FileType.FW:
+        pd_read_function = pd.read_fwf
+    else:
+        pd_read_function = pd.read_csv
 
+    with pd_read_function(file_path, **csv_reader_params) as buffer:
+        for chunk in buffer:
             chunk: DataFrame = execute(chunk_tasks, chunk)
 
             # increment the source row number for the next chunk/buffer processed
@@ -219,9 +224,12 @@ def build_csv_reader_params(
     if file_definition.headers:
         params["header"] = None  # All lines in the file are data lines
         header_columns = []
-
-        # headers contain comments and are List[Dict[str, str]]
-        if isinstance(file_definition.headers[0], dict):
+        
+        if isinstance(file_definition.headers, dict):
+            # headers are of type Dict[str, str]
+            header_columns.extend(file_definition.headers.keys())
+        elif isinstance(file_definition.headers[0], dict):
+            # headers contain comments and are List[Dict[str, str]]
             for item in file_definition.headers:
                 header_columns.extend(item.keys())
         else:
@@ -229,6 +237,14 @@ def build_csv_reader_params(
             header_columns.extend(file_definition.headers)
 
         params["names"] = header_columns
+
+    if file_definition.fileType == FileType.FW:
+        # Model validation ensures that if the file type is fixed width, the headers are a non empty dictionary
+        col_widths = [file_definition.headers[name] for name in params["names"]]
+        params["widths"] = col_widths
+
+        # We do not need 'delimiter' for fixed width params
+        del params["delimiter"]
 
     logger.debug(f"Parsed parameters for CSV Reader {params}")
 

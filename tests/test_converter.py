@@ -150,7 +150,7 @@ def patient_dict() -> Dict:
         'tenantId': 'sample-tenant',
         'streamType': 'live',
         'emptyFieldValues': ['empty', '\\n'],
-        'filePath': '/Users/hammadkhan/Projects/LinuxForHealth/CsvToFHIR/tests/resources/csv/2022-02-18-patient-fwf.dat',
+        'filePath': '2022-02-18-patient-fwf.dat',
         'configResourceType': 'Patient'
     }
 
@@ -351,7 +351,8 @@ def test_transform_patient(
         patient_dict,
         actual_dict,
         ignore_order=True,
-        truncate_datetime="hour"
+        truncate_datetime="hour",
+        exclude_paths={"root['filePath']"}
     )
 
     assert diff == {}

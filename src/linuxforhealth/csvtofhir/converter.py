@@ -110,6 +110,41 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
     :return: Generator yielding a tuple containing: processing errors (optional),  grouping key, and FHIR resources
     :raise: ConverterDefinitionLookupException if a FileDefinition cannot be found for the CSV file_path
     """
+    yield from _convert(file_path, True)
+
+
+def transform(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]:
+    """
+    Same as the convert method except it skips the last step of converting the final dataframe into a fhir resource.
+
+    :param file_path: The path to the CSV file.
+    :return: Generator yielding a tuple containing: processing errors (optional),  grouping key, and FHIR resources
+    :raise: ConverterDefinitionLookupException if a FileDefinition cannot be found for the CSV file_path
+    """
+    yield from _convert(file_path, False)
+
+
+def _convert(file_path: str, create_fhir_resources: bool) -> Generator[Tuple[Any, str, List[str]], None, None]:
+    """
+    Transforms file-based CSV records to either a FHIR Resources or a different data model based on the configuration
+    and the create_fhir_resource flag.
+
+    Conversions are configured using a DataContract which in turn contains FileDefinitions. A single FileDefinition
+    is used to define the CSV -> FHIR conversion process. CSV files are mapped to a FileDefinition using the CSV file
+    name.
+
+    Conversion occurs per row, converting a single CSV to one or more FHIR resources. Results are "yielded" to ensure
+    a lower memory footprint. Each result is a tuple containing the following:
+
+    - processing_exception: Contains the exception, if any, which occurred while processing the data record.
+    - group_by_key: An identifier used to group converted FHIR resource(s) together.
+    - fhir_resources: A list of JSON (string) converted FHIR resource(s).
+
+    :param file_path: The path to the CSV file.
+    :param create_fhir_resources: Flag to indicate if final dataframe should be converted to a fhir resource
+    :return: Generator yielding a tuple containing: processing errors (optional),  grouping key, and FHIR resources
+    :raise: ConverterDefinitionLookupException if a FileDefinition cannot be found for the CSV file_path
+    """
 
     def _append_row_num_to_file_meta(resource_meta: Meta, num: integer) -> Meta:
         """
@@ -190,10 +225,14 @@ def convert(file_path: str) -> Generator[Tuple[Any, str, List[str]], None, None]
             starting_row_num = chunk["rowNum"].max() + 1
             chunk_tasks[0] = Task(name="add_row_num", params={"starting_index": starting_row_num})
 
-            chunk: Series = chunk.apply(_convert_row_to_fhir, axis=1)
+            if create_fhir_resources:
+                chunk: Series = chunk.apply(_convert_row_to_fhir, axis=1)
 
-            for processing_exception, group_by_key, fhir_resources in chunk:
-                yield processing_exception, group_by_key, fhir_resources
+                for processing_exception, group_by_key, fhir_resources in chunk:
+                    yield processing_exception, group_by_key, fhir_resources
+            else:
+                for index, row in chunk.iterrows():
+                    yield None, row.groupByKey, row.to_json()
 
 
 def build_csv_reader_params(

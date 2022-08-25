@@ -194,7 +194,8 @@ def test_validate_contract(monkeypatch, data_contract_directory: str):
         ("2022-02-18-patient-headerless.csv", "00001", "data-contract-headers.json"),
         ("2022-02-18-patient-headerless.csv", "00001", "data-contract-headers-comments.json"),
         ("Patient-headerless.csv", "00001", "data-contract-headers.json"),
-        ("2022-02-18-patient.dat", "00001", "data-contract-delimiter.json")
+        ("2022-02-18-patient.dat", "00001", "data-contract-delimiter.json"),
+        ("2022-02-18-patient-fwf.dat", "00001", "data-contract-fixed-width.json")
     ],
 )
 def test_convert_patient(
@@ -348,3 +349,25 @@ def test_build_csv_reader_params_include_headers(data_contract_with_headers_data
     assert params["header"] is None
     assert params["names"] == file_definition.headers
     assert params["na_values"] == ["empty", "\\n"]
+
+
+def test_build_csv_reader_fixed_width_config(data_contract_fixed_width_model: DataContract):
+    """
+    Tests build CSV reader parameters for fixed width files
+
+    :param data_contract_model: The DataContract model fixture
+    """
+    #print(data_contract_fixed_width_model)
+    config = get_converter_config()
+    file_definition = data_contract_fixed_width_model.fileDefinitions["Patient"]
+    params = build_csv_reader_params(
+        config, data_contract_fixed_width_model.general, file_definition
+    )
+
+    assert len(params) == 6
+    assert params["chunksize"] == config.csv_buffer_size
+    assert "delimiter" not in params
+    assert params["dtype"] == str
+    assert params["na_values"] == ["empty", "\\n"]
+    assert params["names"] == ['hospitalId', 'encounterId', 'patientId', 'sex', 'dateOfBirth', 'givenName', 'familyName', 'ssn', 'state']
+    assert params["widths"] == [6, 8, 8, 1, 10, 12, 12, 11, 16]

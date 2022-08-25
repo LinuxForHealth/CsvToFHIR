@@ -41,6 +41,14 @@ class DataStreamType(str, Enum):
     LIVE = "live"
 
 
+class FileType(str, Enum):
+    """
+    Identifies the file type that needs to parsed (CSV or Fixed Width.)
+    """
+    CSV = "csv"
+    FW = "fixed-width"
+
+
 class GeneralSection(ImmutableModel):
     """
     Contains general resource mapping configurations
@@ -88,6 +96,10 @@ class FileDefinition(ImmutableModel):
     """
     comment: Optional[str]
 
+    fileType: FileType = Field(
+        description="Type of file to parse. Supported options are CSV or fixed width",
+        default = FileType.CSV
+    )
     valueDelimiter: str = Field(
         description="The field value delimiter used in the CSV file",
         default=","
@@ -103,9 +115,10 @@ class FileDefinition(ImmutableModel):
         description="The field used to link records across CSV files"
     )
 
-    headers: Optional[Union[List[str], List[Dict[str, str]]]] = Field(
+    headers: Optional[Union[List[str], List[Dict[str, str]], Dict[str, int]]] = Field(
         description="List of header columns used to parse CSV records." +
-                    "Used when a source file does not include a header"
+                    "Used when a source file does not include a header." +
+                    "Required field when fileType = fixed width"
     )
 
     tasks: Optional[List[Task]] = Field(
@@ -171,6 +184,22 @@ class FileDefinition(ImmutableModel):
                     raise ValueError(msg)
 
         return values
+
+    @root_validator
+    def validate_headers(cls, values):
+        """
+        validates that if fileType is fixed width, then headers config is provided
+        """
+        file_type = values.get("fileType")
+        headers = values.get("headers", None)
+        if file_type and file_type == FileType.FW:
+            if headers is None or not isinstance(headers, dict) or len(headers) == 0:
+                msg = f"Headers are required when fileType is fixed width, and it should a dictionary of type <column name>: <column_width>"
+                logger.error(msg)
+                raise ValueError(msg)
+        
+        return values
+
 
 
 class DataContract(ImmutableModel):

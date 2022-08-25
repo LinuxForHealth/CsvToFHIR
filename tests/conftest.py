@@ -63,6 +63,27 @@ def data_contract_model(data_contract_data: Dict) -> DataContract:
 
 
 @pytest.fixture
+def data_contract_fixed_width_model(data_contract_fixed_width_file_data: Dict) -> DataContract:
+    """
+    A DataContract model fixture, which is immutable.
+    :param data_contract_data: The input data
+    :return: DataContract instance
+    """
+    return DataContract(**data_contract_fixed_width_file_data)
+
+
+@pytest.fixture
+def data_contract_fixed_width_file_data(data_contract_directory: str) -> DataContract:
+    """
+    A dictionary data fixture containing DataContract compatible data for fixed width source files.
+    :return: dictionary
+    """
+    file_path = os.path.join(data_contract_directory, "data-contract-fixed-width.json")
+    with open(file_path) as f:
+        return json.load(f)
+
+
+@pytest.fixture
 def data_contract_with_comments_data(data_contract_directory: str) -> Dict:
     """
     A dictionary data fixture containing DataContract compatible data with comments.

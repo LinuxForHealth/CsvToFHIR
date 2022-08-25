@@ -54,6 +54,7 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
  "fileDefinitions": {
     "Patient": {
      "comment": "patient demographic fields",
+      "fileType": "csv",
       "valueDelimiter": ",",
       "convertColumnsToString": true,
       "resourceType": "Patient",
@@ -65,15 +66,16 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 }
 ```
 
-| Key Name               | Description                                                                                                                   | Required |
-| :--------------------- | :---------------------------------------------------------------------------------------------------------------------------- | :------- |
-| valueDelimiter         | The value, or field, delimiter used in the "CSV" file. Defaults to ","                                                        | N        |
-| comment                | Provides an additional description/comment for the file definition                                                            | N        |
-| convertColumnsToString | When true converts all input columns to Python's "str" data type. If False, Pandas will infer the datatype. Defaults to True. | N        |
-| resourceType           | The target FHIR resource type.                                                                                                | Y        |
-| groupByKey             | The field used to associate the record with other records in separate CSV payloads                                            | Y        |
-| headers                | Provides a header record for a CSV source file without a header. Column names reflect the target record format                | N        |
-| tasks                  | List of tasks to execute against the CSV source data, prior to FHIR conversion.                                               | N        |
+| Key Name               | Description                                                                                                                                                                                                                              | Required |
+| :--------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------- |
+| fileType               | The type of source file. Supports "csv" or "fixed-width". Defaults to "csv"                                                                                                                                                              | N        |
+| valueDelimiter         | The value, or field, delimiter used in the "CSV" file. Defaults to ","                                                                                                                                                                   | N        |
+| comment                | Provides an additional description/comment for the file definition                                                                                                                                                                       | N        |
+| convertColumnsToString | When true converts all input columns to Python's "str" data type. If False, Pandas will infer the datatype. Defaults to True.                                                                                                            | N        |
+| resourceType           | The target FHIR resource type.                                                                                                                                                                                                           | Y        |
+| groupByKey             | The field used to associate the record with other records in separate CSV payloads                                                                                                                                                       | Y        |
+| headers                | Provides a header record for a CSV source file without a header. Column names reflect the target record format. When `fileType` = fixed-width, headers is a required field, and should be a dictionary of type <col_name>:<col_width>    | N        |
+| tasks                  | List of tasks to execute against the CSV source data, prior to FHIR conversion.                                                                                                                                                          | N        |
 
 #### Validations
 

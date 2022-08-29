@@ -38,9 +38,7 @@ def convert_record(
         "Patient Tokens",
         "Patient Tokens"
     )
-    
-    token_cc_system = incoming_data.identifierTypeSystem
-    
+      
     # loop through token list and create token identifiers
     identifierList = []
     if incoming_data.tokenList:
@@ -51,9 +49,9 @@ def convert_record(
             token_name = tokens[0]
             token_value = tokens[1]
             token_system = tokens[2]
-            token_id = incoming_data.identifierNamePrefix + "." + token_name
+            token_id = incoming_data.baseSystem + "." + token_name
             
-            identifier = _build_token_identifier(token_id, token_value, token_system, token_cc_system)
+            identifier = _build_token_identifier(token_id, token_value, token_system)
             identifierList.append(identifier)
             
     if incoming_data.otherIdentifierList:
@@ -64,7 +62,7 @@ def convert_record(
             name = parts[0]
             value = parts[1]
             system = parts[2]
-            id = incoming_data.identifierNamePrefix + "." + name
+            id = incoming_data.baseSystem + "." + name
             
             identifier = _build_other_identifier(id, name, value, system)
             identifierList.append(identifier)
@@ -107,8 +105,8 @@ def convert_record(
 #     "type": {
 #         "coding": [
 #             {
-#                 "code": "sid",                   # or for datavant: "token_encryption_key", "tokenized_sid", also for explorys "source_patient_sid"
-#                 "system": "urn:id:merative"      # or "urn:id:datavant"
+#                 "code": "<name>",
+#                 "system": "<system>"
 #             }
 #         ]
 #     },
@@ -117,14 +115,14 @@ def convert_record(
 def _build_other_identifier(id, name, value, system):
     
         identifier_type_cc = Coding.construct(
-            system=system,
+            system=fhir_utils.get_uri_format(system),
             code=name
         )
                 
         identifier = Identifier.construct(
             id=id,
             value=str(value),
-            system=system,
+            system=fhir_utils.get_uri_format(system),
             type=identifier_type_cc
         )
         
@@ -146,10 +144,10 @@ def _build_other_identifier(id, name, value, system):
 #     },
 #     "value": "<token value>"
 # },
-def _build_token_identifier(token_id, token_value, token_system, token_cc_system):
+def _build_token_identifier(token_id, token_value, token_system):
         
         identifier_type_cc = fhir_utils.get_codeable_concept(
-            token_cc_system,
+            "http://ibm.com/fhir/cdm/CodeSystem/identifier-type",
             "TKN",
             "Token identifier",
             "Token identifier"

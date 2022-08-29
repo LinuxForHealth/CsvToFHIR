@@ -11,10 +11,8 @@ class IdentifierDetails(BaseModel):
     token_system: Optional[str]
 
 class BasicCsv(CsvBaseModel):
-    identifierTypeSystem: Optional[str]        # system for token identifiers
     baseSystem: Optional[str]                  # base system
-    identifierNamePrefix: Optional[str]        # prefix for identifier ids
     tokenList: Optional[List[str]]             # token identifier list
     patientInternalIdentifier: Optional[str]   # id
-    created_date: Optional[str]                # subject
+    created_date: Optional[str]                # created date
     otherIdentifierList: Optional[List[str]]   # non-token identifiers

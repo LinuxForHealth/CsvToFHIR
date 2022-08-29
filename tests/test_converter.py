@@ -357,7 +357,6 @@ def test_build_csv_reader_fixed_width_config(data_contract_fixed_width_model: Da
 
     :param data_contract_model: The DataContract model fixture
     """
-    #print(data_contract_fixed_width_model)
     config = get_converter_config()
     file_definition = data_contract_fixed_width_model.fileDefinitions["Patient"]
     params = build_csv_reader_params(
@@ -371,3 +370,23 @@ def test_build_csv_reader_fixed_width_config(data_contract_fixed_width_model: Da
     assert params["na_values"] == ["empty", "\\n"]
     assert params["names"] == ['hospitalId', 'encounterId', 'patientId', 'sex', 'dateOfBirth', 'givenName', 'familyName', 'ssn', 'state']
     assert params["widths"] == [6, 8, 8, 1, 10, 12, 12, 11, 16]
+
+
+def test_build_csv_reader_params_include_pandas_params(data_contract_with_pandas_params_model: DataContract):
+    """
+    Tests build CSV reader parameters
+
+    :param data_contract_with_headers_data: The DataContract raw data
+    """
+    config = get_converter_config()
+    file_definition = data_contract_with_pandas_params_model.fileDefinitions["Patient"]
+    params = build_csv_reader_params(
+        config, data_contract_with_pandas_params_model.general, file_definition
+    )
+
+    assert len(params) == 5
+    assert params["chunksize"] == config.csv_buffer_size
+    assert params["delimiter"] == ","
+    assert params["dtype"] == str
+    assert params["na_values"] == ["empty", "\\n"]
+    assert params["skiprows"] == 2

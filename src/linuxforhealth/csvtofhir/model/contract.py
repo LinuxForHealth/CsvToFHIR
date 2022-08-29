@@ -121,6 +121,12 @@ class FileDefinition(ImmutableModel):
                     "Required field when fileType = fixed width"
     )
 
+    pandas_params: Optional[Dict[str, Any]] = Field(
+        description="Dictionary of any additional parameters that need to be passed to the pandas read_* function." +
+                    "Any parameters provided here will overwrite existing parameters that are auto configured",
+        default=None
+    )
+
     tasks: Optional[List[Task]] = Field(
         description="Tasks are used to transform CSV source records to the internal record format."
     )

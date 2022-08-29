@@ -42,6 +42,29 @@ def data_contract_with_headers_model(
 
 
 @pytest.fixture
+def data_contract_with_pandas_params_data(data_contract_directory: str) -> Dict:
+    """
+    A dictionary data fixture containing DataContract compatible data which includes extra parameters for pandas.
+    :return: dictionary
+    """
+    file_path = os.path.join(data_contract_directory, "data-contract-pandas-params.json")
+    with open(file_path) as f:
+        return json.load(f)
+
+
+@pytest.fixture
+def data_contract_with_pandas_params_model(
+    data_contract_with_pandas_params_data: Dict,
+) -> DataContract:
+    """
+    A DataContract model fixture, which is immutable.
+    :param data_contract_with_pandas_params_data: The input data
+    :return: DataContract instance
+    """
+    return DataContract(**data_contract_with_pandas_params_data)
+
+
+@pytest.fixture
 def data_contract_data(data_contract_directory: str) -> Dict:
     """
     A dictionary data fixture containing DataContract compatible data.

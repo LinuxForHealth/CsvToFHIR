@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from linuxforhealth.csvtofhir import converter
 from linuxforhealth.csvtofhir.config import ConverterConfig, get_converter_config
 from linuxforhealth.csvtofhir.converter import (ConverterDefinitionLookupException,
-                                                build_csv_reader_params, convert,
+                                                build_csv_reader_params, convert, transform,
                                                 load_data_contract, validate_contract)
 from linuxforhealth.csvtofhir.model.contract import DataContract
 
@@ -130,6 +130,29 @@ def patient_resource() -> Patient:
         ]
     }
     return Patient(**patient_data)
+
+
+@pytest.fixture
+def patient_dict() -> Dict:
+    return {
+        'hospitalId': 'hospa',
+        'encounterId': 'ENC1111',
+        'patientId': 'MRN1234',
+        'sex': 'male',
+        'dateOfBirth': '1951-07-06',
+        'givenName': 'Thomas',
+        'familyName': 'Jones',
+        'ssn': '123-45-6789',
+        'state': 'MN',
+        'rowNum': 1,
+        'groupByKey': 'MRN1234',
+        'timeZone': 'US/Eastern',
+        'tenantId': 'sample-tenant',
+        'streamType': 'live',
+        'emptyFieldValues': ['empty', '\\n'],
+        'filePath': '2022-02-18-patient-fwf.dat',
+        'configResourceType': 'Patient'
+    }
 
 
 @pytest.fixture(autouse=True)
@@ -260,6 +283,78 @@ def test_convert_patient(
         ignore_order=True,
         truncate_datetime="hour"
     )
+    assert diff == {}
+
+
+@pytest.mark.parametrize(
+    "input_file_name,input_file_count,mapping_file_name",
+    [
+        ("2022-02-18-patient-fwf.dat", "00001", "data-contract-fixed-width-transform-only.json")
+    ],
+)
+def test_transform_patient(
+    data_contract_directory: str,
+    monkeypatch,
+    csv_directory: str,
+    input_file_name: str,
+    input_file_count: str,
+    mapping_file_name: str,
+    patient_dict: Dict,
+    resource_meta_object: Meta,
+):
+    """
+    Tests the transform function with a patient record and parametrized file names.
+    A key map is used to provide field mappings.
+    The file names are used to validate that the conversion loads files using a "glob"'ish
+    type of matching.
+
+    :param data_contract_directory: The data contract directory fixture
+    :param monkeypatch: pytest monkeypatch fixture
+    :param csv_directory: CSV directory path fixture
+    :param input_file_name: The source CSV file name
+    :param mapping_file_name: The resource mapping file
+    :param patient_dict: The expected patient dict fixture
+    """
+    # bootstrap config
+    monkeypatch.setenv("MAPPING_CONFIG_DIRECTORY", data_contract_directory)
+    config: ConverterConfig = ConverterConfig(
+        mapping_config_file_name=mapping_file_name
+    )
+    # mock validate_contract to return the contract model
+    contract: DataContract = load_data_contract(config.configuration_path)
+    monkeypatch.setattr(converter, "validate_contract", lambda: contract)
+
+    input_file_path = f"{csv_directory}/{input_file_name}"
+    # returns a list of results [ (exception, group by key, [resource, resource]), (etc) ]
+    records = [(e, k, r) for e, k, r in transform(input_file_path)]
+    assert len(records) == 1
+
+    conversion_result = records[0]
+    assert len(conversion_result) == 3
+
+    exception = conversion_result[0]
+    assert exception is None
+
+    group_by_key = conversion_result[1]
+    assert group_by_key == "MRN1234"
+
+    encoded_result = conversion_result[2]
+    assert encoded_result is not None
+
+    actual_dict = json.loads(encoded_result)
+    assert len(actual_dict) > 0
+        
+    # TODO: Originally, was "second", apparently if it is at the boundry of it it will fail
+    # Changed to Hour precision, but that is not really solving the issue, more like reducing the occurrence of it
+    # Marking to research
+    diff = DeepDiff(
+        patient_dict,
+        actual_dict,
+        ignore_order=True,
+        truncate_datetime="hour",
+        exclude_paths={"root['filePath']"}
+    )
+
     assert diff == {}
 
 

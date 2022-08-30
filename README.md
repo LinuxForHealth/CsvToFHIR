@@ -32,11 +32,11 @@ git clone https://github.com/LinuxForHealth/CsvToFHIR.git
 cd CsvToFHIR
 
 # create the virtual environment (may take some time to complete)
-python3 -m venv venv --clear
+python -m venv venv --clear
 .\venv\Scripts\activate.bat
-python3 -m pip install --upgrade pip setuptools wheel
+python -m pip install --upgrade pip setuptools wheel
 # integrate the local development environment with the virtual environment
-python3 -m pip install -e .[dev]
+python -m pip install -e .[dev]
 ````
 The `pip install` command for the local project will print a WARNING similar to
 ```shell
@@ -51,7 +51,7 @@ on the SYSTEM path in order to invoke csvtofhir without including the full path 
 
 To execute unit tests, simply run:
 ```shell
-python3 -m pytest
+python -m pytest
 ```
 
 ### CSVToFHIR CLI

@@ -31,7 +31,7 @@ def get_procedure_sequence_extensions(incoming_data: ProcedureCsv) -> Union[List
         return None
     extensions_list: List[Extension] = []
     ext: Extension = Extension.construct(url=ExtensionUrl.PROCEDURE_SEQUENCE_EXTENSION_URL)
-    ext.valueString = incoming_data.procedureEncounterSequenceId
+    ext.valuePositiveInt = incoming_data.procedureEncounterSequenceId
     extensions_list.append(ext)
     return extensions_list if extensions_list else None
 

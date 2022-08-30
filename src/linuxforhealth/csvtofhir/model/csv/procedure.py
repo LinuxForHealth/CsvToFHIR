@@ -39,7 +39,7 @@ class ProcedureCsv(CsvBaseModel):
     procedureModifierList: Optional[str]
     procedureModifierSystem: Optional[str]
 
-    procedureEncounterSequenceId: Optional[str]
+    procedureEncounterSequenceId: Optional[str]  # Must be a positive int
 
     practitionerInternalId: Optional[str]
     practitionerNPI: Optional[str]

@@ -20,7 +20,7 @@ class ExtensionUrl:
     PATIENT_AGE_IN_MONTHS_EXTENSION_URL = CDM_BASE_EXTENSION_URL + "snapshot-age-in-months"
     PATIENT_AGE_IN_WEEKS_EXTENSION_URL = CDM_BASE_EXTENSION_URL + "snapshot-age-in-weeks"
     PROCEDURE_MODIFIER_EXTENSION_URL = CDM_BASE_EXTENSION_URL + "procedure-modifier"
-    PROCEDURE_SEQUENCE_EXTENSION_URL = CDM_BASE_EXTENSION_URL + "procedure-sequence"
+    PROCEDURE_SEQUENCE_EXTENSION_URL = CDM_BASE_EXTENSION_URL + "reference-sequence"
 
 
 class SystemConstants:

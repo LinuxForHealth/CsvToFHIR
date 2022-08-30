@@ -20,7 +20,7 @@ def patient_pp_sample():
         "encounterNumber": "1111",
         "procedureCode": "5A1D70Z",
         "procedureCodeSystem": "http://hl7.org/fhir/sid/icd-10-cm",
-        "procedureEncounterSequenceId": "1A",
+        "procedureEncounterSequenceId": "1",
         "procedurePerformedDateTime": "2021-10-15T13:00:00.000Z",
         "practitionerInternalId": "ABCDE'F",
         "practitionerNPI": None,
@@ -100,8 +100,8 @@ def expected_pp_encounter():
             {
                 "extension": [
                     {
-                        "url": "http://ibm.com/fhir/cdm/StructureDefinition/procedure-sequence",
-                        "valueString": "1A"
+                        "url": "http://ibm.com/fhir/cdm/StructureDefinition/reference-sequence",
+                        "valuePositiveInt": 1
                     }
                 ],
                 "id": "Procedure.id",

@@ -1,4 +1,5 @@
 from importlib.resources import Resource
+from time import time
 from typing import Dict, List
 
 from fhir.resources.basic import Basic
@@ -90,7 +91,11 @@ def convert_record(
     
     # Add created date if it's present
     if incoming_data.created_date != None and incoming_data.created_date  != "":
+        # remove the time part of the date time if it exists
         time_part_index = incoming_data.created_date.index(" ")
+        # if there is no time then use the end of the string.
+        if time_part_index == -1:
+            time_part_index = len(incoming_data.created_date)
         created_date = incoming_data.created_date[0:time_part_index]
         fhir_resource.created = fhir_utils.get_date(created_date)
 

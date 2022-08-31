@@ -27,7 +27,9 @@ def get_modifier_extensions(incoming_data: ProcedureCsv) -> Union[List[Extension
 
 
 def get_procedure_sequence_extensions(incoming_data: ProcedureCsv) -> Union[List[Extension], None]:
-    if not incoming_data.procedureEncounterSequenceId:
+    if not incoming_data.procedureEncounterSequenceId or \
+       not incoming_data.procedureEncounterSequenceId.isdigit() or \
+       int(incoming_data.procedureEncounterSequenceId) < 0:
         return None
     extensions_list: List[Extension] = []
     ext: Extension = Extension.construct(url=ExtensionUrl.PROCEDURE_SEQUENCE_EXTENSION_URL)

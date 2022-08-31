@@ -5,6 +5,7 @@ This internal representation provides a single normalized format used to convert
 
 ## Table of Contents
 - [Allergy Intolerance](#allergy-intolerance)
+- [Basic](#basic)
 - [Condition](#condition)
 - [Encounter](#encounter)
 - [Immunization](#immunization)
@@ -33,6 +34,13 @@ The Condition conversion produces the following FHIR resources:
 - Condition
 - Encounter (optional)
 
+## Basic
+
+See [BasicCsv](/src/linuxforhealth/csvtofhir/model/csv/basic.py) for the Condition model fields.
+
+The Basic conversion produces the following FHIR resources:
+
+- Basic
 
 ## Encounter
 

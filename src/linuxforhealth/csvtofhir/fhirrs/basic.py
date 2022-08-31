@@ -52,6 +52,10 @@ def convert_record(
             token_system = tokens[2]
             token_id = incoming_data.baseSystem + "." + token_name
             
+            # if the value is null then discard this token
+            if token_value == "null":
+                continue
+            
             identifier = _build_token_identifier(token_id, token_value, token_system)
             identifierList.append(identifier)
             
@@ -64,6 +68,10 @@ def convert_record(
             value = parts[1]
             system = parts[2]
             id = incoming_data.baseSystem + "." + name
+            
+            # if the value is null then discard this identifier
+            if value == "null":
+                continue
             
             identifier = _build_other_identifier(id, name, value, system)
             identifierList.append(identifier)
@@ -92,9 +100,9 @@ def convert_record(
     # Add created date if it's present
     if incoming_data.created_date != None and incoming_data.created_date  != "":
         # remove the time part of the date time if it exists
-        time_part_index = incoming_data.created_date.index(" ")
-        # if there is no time then use the end of the string.
-        if time_part_index == -1:
+        if " " in incoming_data.created_date:
+            time_part_index = incoming_data.created_date.index(" ")
+        else:
             time_part_index = len(incoming_data.created_date)
         created_date = incoming_data.created_date[0:time_part_index]
         fhir_resource.created = fhir_utils.get_date(created_date)

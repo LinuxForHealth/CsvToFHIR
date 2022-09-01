@@ -10,9 +10,7 @@
   },
   "fileDefinitions": {
     "Patient": {
-      "pandas_params": {
-        "skiprows": 2
-      },
+      "skiprows": [2,3],
       "valueDelimiter": ",",
       "resourceType": "Patient",
       "groupByKey": "patientId",

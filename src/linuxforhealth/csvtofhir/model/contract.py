@@ -121,9 +121,10 @@ class FileDefinition(ImmutableModel):
                     "Required field when fileType = fixed width"
     )
 
-    pandas_params: Optional[Dict[str, Any]] = Field(
-        description="Dictionary of any additional parameters that need to be passed to the pandas read_* function." +
-                    "Any parameters provided here will overwrite existing parameters that are auto configured",
+    skiprows: Optional[Union[int, List[int]]] = Field(
+        description="Skip rows from the csv file. Value can be in integet to skip that many lines from the " +
+                    "top, or an array to skip rows with that index (0 based). e.g. `[2, 3]` will skip row 3" +
+                    "and 4 from the file (including headers)",
         default=None
     )
 

@@ -372,16 +372,16 @@ def test_build_csv_reader_fixed_width_config(data_contract_fixed_width_model: Da
     assert params["widths"] == [6, 8, 8, 1, 10, 12, 12, 11, 16]
 
 
-def test_build_csv_reader_params_include_pandas_params(data_contract_with_pandas_params_model: DataContract):
+def test_build_csv_reader_params_include_skiprows(data_contract_with_skiprows_model: DataContract):
     """
     Tests build CSV reader parameters
 
-    :param data_contract_with_headers_data: The DataContract raw data
+    :param data_contract_with_skiprows_model: The DataContract raw data
     """
     config = get_converter_config()
-    file_definition = data_contract_with_pandas_params_model.fileDefinitions["Patient"]
+    file_definition = data_contract_with_skiprows_model.fileDefinitions["Patient"]
     params = build_csv_reader_params(
-        config, data_contract_with_pandas_params_model.general, file_definition
+        config, data_contract_with_skiprows_model.general, file_definition
     )
 
     assert len(params) == 5
@@ -389,4 +389,4 @@ def test_build_csv_reader_params_include_pandas_params(data_contract_with_pandas
     assert params["delimiter"] == ","
     assert params["dtype"] == str
     assert params["na_values"] == ["empty", "\\n"]
-    assert params["skiprows"] == 2
+    assert params["skiprows"] == [2,3]

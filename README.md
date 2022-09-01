@@ -33,10 +33,10 @@ cd CsvToFHIR
 
 # create the virtual environment (may take some time to complete)
 python -m venv venv --clear
-.\venv\Scripts\activate.bat
+.\venv\Scripts\activate
 python -m pip install --upgrade pip setuptools wheel
 # integrate the local development environment with the virtual environment
-python -m pip install -e .[dev]
+python -m pip install -e ".[dev]"
 ````
 The `pip install` command for the local project will print a WARNING similar to
 ```shell

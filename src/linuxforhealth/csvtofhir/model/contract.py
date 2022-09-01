@@ -121,6 +121,13 @@ class FileDefinition(ImmutableModel):
                     "Required field when fileType = fixed width"
     )
 
+    skiprows: Optional[Union[int, List[int]]] = Field(
+        description="Skip rows from the csv file. Value can be in integet to skip that many lines from the " +
+                    "top, or an array to skip rows with that index (0 based). e.g. `[2, 3]` will skip row 3" +
+                    "and 4 from the file (including headers)",
+        default=None
+    )
+
     tasks: Optional[List[Task]] = Field(
         description="Tasks are used to transform CSV source records to the internal record format."
     )

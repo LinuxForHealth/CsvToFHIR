@@ -1,0 +1,72 @@
+{
+  "general": {
+    "timeZone": "US/Eastern",
+    "tenantId": "sample-tenant",
+    "streamType": "live",
+    "emptyFieldValues": [
+      "empty",
+      "\\n"
+    ]
+  },
+  "fileDefinitions": {
+    "Patient": {
+      "skiprows": [2,3],
+      "valueDelimiter": ",",
+      "resourceType": "Patient",
+      "groupByKey": "patientId",
+      "tasks": [
+        {
+          "name": "add_constant",
+          "params": {
+            "name": "ssnSystem",
+            "value": "http://hl7.org/fhir/sid/us-ssn"
+          }
+        },
+        {
+          "name": "format_date",
+          "params": {
+            "columns": [
+              "dateOfBirth"
+            ],
+            "date_format": "%Y-%m-%d"
+          }
+        },
+        {
+          "name": "map_codes",
+          "params": {
+            "code_map": {
+              "sex": {
+                "default": "unknown",
+                "F": "female",
+                "M": "male",
+                "O": "other"
+              }
+            }
+          }
+        },
+        {
+          "name": "map_codes",
+          "comment": "Maps state to abbreviation",
+          "params": {
+            "code_map": {
+              "state": "states.csv"
+            }
+          }
+        },
+        {
+          "name": "rename_columns",
+          "params": {
+            "column_map": {
+              "patientId": "patientInternalId",
+              "hospitalId": "assigningAuthority",
+              "givenName": "nameFirstMiddle",
+              "familyName": "nameLast",
+              "sex": "gender",
+              "dateOfBirth": "birthDate"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

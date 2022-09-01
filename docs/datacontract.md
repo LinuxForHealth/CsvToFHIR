@@ -59,6 +59,7 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
       "convertColumnsToString": true,
       "resourceType": "Patient",
       "groupByKey": "patientId",
+      "skiprows": [2],
       "headers": [],
       "tasks": []
     }
@@ -74,13 +75,15 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 | convertColumnsToString | When true converts all input columns to Python's "str" data type. If False, Pandas will infer the datatype. Defaults to True.                                                                                                            | N        |
 | resourceType           | The target FHIR resource type.                                                                                                                                                                                                           | Y        |
 | groupByKey             | The field used to associate the record with other records in separate CSV payloads                                                                                                                                                       | Y        |
-| headers                | Provides a header record for a CSV source file without a header. Column names reflect the target record format. When `fileType` = fixed-width, headers is a required field, and should be a dictionary of type <col_name>:<col_width>    | N        |
+| skiprows               | Skip rows from the csv file. Value can be in integet to skip that many lines from the top, or an array to skip rows with that index (0 based). e.g. `[2, 3]` will skip row 3 and 4 from the file (including headers)                     | N        |
+| headers                | Provides a header record for a CSV source file without a header. Column names reflect the target record format. When `fileType=fixed-width`, headers is a required field, and should be a dictionary of type <col_name>:<col_width>      | N        |
 | tasks                  | List of tasks to execute against the CSV source data, prior to FHIR conversion.                                                                                                                                                          | N        |
 
 #### Validations
 
 - resourceType is a valid FHIR resource type name
 - tasks definitions align with pipeline task function implementations
+- if fileType is `fixed-width` headers are mandatory
 
 
 ### Tasks

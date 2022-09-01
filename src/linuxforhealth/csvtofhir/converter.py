@@ -290,6 +290,9 @@ def build_csv_reader_params(
         # We do not need 'delimiter' for fixed width params
         del params["delimiter"]
 
+    if file_definition.skiprows:
+        params["skiprows"] = file_definition.skiprows
+
     logger.debug(f"Parsed parameters for CSV Reader {params}")
 
     return params

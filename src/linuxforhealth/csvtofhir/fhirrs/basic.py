@@ -6,6 +6,7 @@ from fhir.resources.basic import Basic
 from fhir.resources.meta import Meta
 from fhir.resources.identifier import Identifier
 from fhir.resources.coding import Coding
+from fhir.resources.codeableconcept import CodeableConcept
 
 from linuxforhealth.csvtofhir.model.csv.basic import BasicCsv
 from linuxforhealth.csvtofhir.fhirutils import fhir_utils
@@ -127,10 +128,13 @@ def convert_record(
 # }
 def _build_other_identifier(id, name, value, system):
     
-        identifier_type_cc = Coding.construct(
+        identifier_type_cc = CodeableConcept.construct()
+        coding = Coding.construct(
             system=fhir_utils.get_uri_format(system),
             code=name
         )
+        identifier_type_cc.coding = []
+        identifier_type_cc.coding.append(coding)
                 
         identifier = Identifier.construct(
             id=id,

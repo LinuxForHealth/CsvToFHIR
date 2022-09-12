@@ -50,6 +50,8 @@ def _set_observation_value(fhir_resource: Observation, incoming_data: Observatio
     else:
         fhir_resource.valueString = incoming_data.observationValue
 
+    return
+
 
 def _get_observation_value_data_type(incoming_data: ObservationCsv) -> str:
     value = incoming_data.observationValue

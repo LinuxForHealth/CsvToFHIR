@@ -171,6 +171,7 @@ def build_identifier(value, system, type_code_system, type_code, type_code_text=
         identifier_id = fhir_utils.format_id_datatype(f"{type_code}.{value}")
 
     c: Coding = None
+    cc: CodeableConcept = None
     if type_code:
         c = Coding.construct(code=type_code, system=type_code_system, display=type_code_text)
     if c or type_code_text:

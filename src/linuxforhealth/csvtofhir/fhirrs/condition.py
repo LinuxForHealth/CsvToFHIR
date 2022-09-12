@@ -11,7 +11,6 @@ from fhir.resources.meta import Meta
 from linuxforhealth.csvtofhir.fhirrs import encounter
 from linuxforhealth.csvtofhir.fhirutils import fhir_constants, fhir_identifier_utils, fhir_utils
 from linuxforhealth.csvtofhir.fhirutils.fhir_constants import ConditionResource, ExtensionUrl, SystemConstants
-from linuxforhealth.csvtofhir.model.csv import csv_utils
 from linuxforhealth.csvtofhir.model.csv.condition import (CONDITION_CATEGORY_ENCOUNTER_DIAGNOSIS,
                                                           CONDITION_CATEGORY_PROBLEM_LIST,
                                                           ConditionCsv)
@@ -166,7 +165,8 @@ def _connect_encoding_references(
         rank = incoming_data.get_encounter_diagnosis_rank_int()
         # Build Encounter.diagnosis element for diagnosis.use
         if incoming_data.conditionDiagnosisUse:
-            diagnosis = _build_diagnosis_with_use(incoming_data.conditionDiagnosisUse, rank, diagnosis_id, condition_reference)
+            diagnosis = _build_diagnosis_with_use(
+                incoming_data.conditionDiagnosisUse, rank, diagnosis_id, condition_reference)
             enc.diagnosis.append(diagnosis)
 
         if not len(enc.diagnosis):  # no dianosis.use values, add single diagnosis element without 'use'

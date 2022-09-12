@@ -6,8 +6,7 @@ from fhir.resources.resource import Resource
 from linuxforhealth.csvtofhir.fhirrs import medication_use
 from linuxforhealth.csvtofhir.fhirutils import fhir_utils
 from linuxforhealth.csvtofhir.model.csv.medication_use import (RESOURCE_TYPE_MED_ADMINISTRATION,
-                                                               RESOURCE_TYPE_MED_STATEMENT,
-                                                               MEDICATION_STATEMENT_DEFAULT_STATUS)
+                                                               RESOURCE_TYPE_MED_STATEMENT)
 
 
 def convert_record(

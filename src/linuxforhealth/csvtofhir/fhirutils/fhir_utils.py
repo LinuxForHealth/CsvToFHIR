@@ -447,7 +447,7 @@ def get_datetime(value: str, tzone: str = None):
             tzone = pytz.timezone(tzone)
             dt = tzone.localize(dt)
         return dt
-    except BaseException:
+    except Exception:
         logger.warning("Unable to parse datetime {value}")
         return None
 
@@ -560,7 +560,7 @@ def _validate_uri(value: str):
     try:
         result = urlparse(value)
         return result.scheme
-    except BaseException:
+    except Exception:
         logger.warning("Unable to validate uri. Invalid uri")
         return False
 

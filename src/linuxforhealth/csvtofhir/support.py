@@ -2,7 +2,6 @@ import csv
 import json
 import logging
 import os
-from logging import NullHandler
 from typing import Dict, List
 
 
@@ -62,7 +61,7 @@ def get_logger(name):
     :return: Returns the logger object
     """
     logger = logging.getLogger(name)
-    logger.addHandler(NullHandler())
+    logger.addHandler(logging.NullHandler())
     logger.setLevel(logging.INFO)
 
     # uncomment the lines below to enable local environment logging

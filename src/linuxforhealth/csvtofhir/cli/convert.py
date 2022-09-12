@@ -2,7 +2,6 @@ import json
 import os
 import re
 from collections import defaultdict
-from json import JSONDecodeError
 from typing import Dict, List
 
 from linuxforhealth.csvtofhir.converter import convert
@@ -174,7 +173,7 @@ def _convert_source_file(
         try:
             resources_data: List[Dict] = [json.loads(r) for r in resources]
             _write_fhir_resources(resources_data, group_key, group_key_dir, group_key_resource_counter)
-        except JSONDecodeError as je:
+        except json.JSONDecodeError as je:
             print(f"Error decoding FHIR resource Group Key = {group_key} in File = {source_file_path}")
             print(f"{je}")
             return

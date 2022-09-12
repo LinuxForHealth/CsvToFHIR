@@ -175,12 +175,13 @@ def build_identifier(value, system, type_code_system, type_code, type_code_text=
         c = Coding.construct(code=type_code, system=type_code_system, display=type_code_text)
     if c or type_code_text:
         cc = CodeableConcept.construct(coding=[c] if c else None, text=type_code_text)
-    return Identifier.construct(
-        id=identifier_id,
-        value=str(value),
-        system=fhir_utils.get_uri_format(system),
-        type=cc
-    )
+        return Identifier.construct(
+            id=identifier_id,
+            value=str(value),
+            system=fhir_utils.get_uri_format(system),
+            type=cc
+        )
+    return None
 
 
 def build_identifier_by_type(value, system, id_type: IdentifierType) -> Union[Identifier, None]:

@@ -48,3 +48,4 @@ virtualenv/
 notebooks/
 .ipynb_checkpoints
 .history/
+notebooks

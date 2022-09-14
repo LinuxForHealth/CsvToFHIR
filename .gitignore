@@ -45,6 +45,6 @@ pytest-report.xml
 __pycache__
 venv/
 virtualenv/
-notebooks/*.ipynb
+notebooks/
 .ipynb_checkpoints
 .history/

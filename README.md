@@ -126,6 +126,26 @@ The following table lists packages which emit logging information.
 
 To utilize logging within a local development environment, please review the comments within the [support module](src/linuxforhealth/csvtofhir/support.py).
 
+## Optional Notebook Support
+
+CsvToFhir includes optional support for using notebooks and visualization tools such as [JupyterLab](https://jupyterlab.readthedocs.io/en/stable/).
+
+To add notebook support run setup with the "notebook" extra:
+
+```shell
+python3 -m pip install -e .[notebook]
+```
+
+Use the following commands to launch the notebook server
+```shell
+# Windows Example
+jupyter-lab --app_dir=src\ --preferred_dir=notebooks\
+
+# Linux Example
+jupyter-lab --app_dir=./src --preferred_dir=./notebooks
+```
+
+
 ## Additional Documentation
 - [DataContract Design](docs/datacontract.md)
 - [Implementation Guide](docs/implementation-guide.md)

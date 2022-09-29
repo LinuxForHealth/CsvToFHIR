@@ -7,7 +7,6 @@ from unittest.mock import patch
 from linuxforhealth.csvtofhir.model.contract import DataContract
 from linuxforhealth.csvtofhir.config import ConverterConfig, get_converter_config
 from linuxforhealth.csvtofhir.converter import load_data_contract
-import linuxforhealth
 
 
 @pytest.mark.parametrize(

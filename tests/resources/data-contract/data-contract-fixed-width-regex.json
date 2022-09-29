@@ -1,0 +1,64 @@
+{
+  "general": {
+    "timeZone": "US/Eastern",
+    "tenantId": "sample-tenant",
+    "streamType": "live",
+    "emptyFieldValues": [
+      "empty",
+      "\\n"
+    ],
+    "regexFilenames": true
+  },
+  "fileDefinitions": {
+    "2022.*\\-patient\\-fwf": {
+      "fileType": "fixed-width",
+      "valueDelimiter": ",",
+      "resourceType": "Patient",
+      "groupByKey": "patientId",
+      "headers": {
+        "hospitalId": 6,
+        "encounterId": 8,
+        "patientId": 8,
+        "sex": 1,
+        "dateOfBirth": 10,
+        "givenName": 12,
+        "familyName": 12,
+        "ssn": 11,
+        "state": 16
+      },
+      "tasks": [
+        {
+          "name": "format_date",
+          "params": {
+            "columns": [
+              "dateOfBirth"
+            ],
+            "date_format": "%Y-%m-%d"
+          }
+        },
+        {
+          "name": "map_codes",
+          "params": {
+            "code_map": {
+              "sex": {
+                "default": "unknown",
+                "F": "female",
+                "M": "male",
+                "O": "other"
+              }
+            }
+          }
+        },
+        {
+          "name": "map_codes",
+          "comment": "Maps state to abbreviation",
+          "params": {
+            "code_map": {
+              "state": "states.csv"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

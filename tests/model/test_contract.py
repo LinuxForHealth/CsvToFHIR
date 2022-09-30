@@ -2,7 +2,6 @@ from typing import Dict
 
 import pytest
 import pydantic
-from requests import NullHandler 
 
 from linuxforhealth.csvtofhir.model.contract import DataContract
 from linuxforhealth.csvtofhir.config import ConverterConfig, get_converter_config

@@ -1,7 +1,8 @@
 from typing import Dict
 
 import pytest
-import pydantic 
+import pydantic
+from requests import NullHandler 
 
 from linuxforhealth.csvtofhir.model.contract import DataContract
 from linuxforhealth.csvtofhir.config import ConverterConfig, get_converter_config
@@ -145,8 +146,33 @@ def test_datacontract_with_invalid_external_config(
     )
     
     get_converter_config.cache_clear()
-    # mock validate_contract to return the contract model
     with pytest.raises(pydantic.error_wrappers.ValidationError) as exec_info:
         contract: DataContract = load_data_contract(config.configuration_path)
+
+    get_converter_config.cache_clear()
+
+
+def test_datacontract_with_valid_external_config(
+    data_contract_directory: str,
+    monkeypatch,
+):
+    """
+    Test that loading a valid external fileDefinition works as expected
+
+    :param data_contract_directory: The data contract directory fixture
+    :param monkeypatch: pytest monkeypatch fixture
+    """
+    # bootstrap config
+    monkeypatch.setenv("MAPPING_CONFIG_DIRECTORY", data_contract_directory)
+    config: ConverterConfig = ConverterConfig(
+        mapping_config_file_name="data-contract-fixed-width-external-config.json"
+    )
+    
+    get_converter_config.cache_clear()
+    
+    contract: DataContract = load_data_contract(config.configuration_path)
+
+    assert contract is not None
+    assert isinstance(contract.fileDefinitions, Dict)
 
     get_converter_config.cache_clear()

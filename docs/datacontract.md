@@ -51,9 +51,9 @@ conversion process. A single data contract file is used to support multiple CSVT
 - streamType is either historical or live
 
 ### FileDefinition
-The top-level key within a FileDefinition serves as the FileDefinition name. This name is matched against the input CSV file using either string match (case-insensitive) or regex (case-sensitive) [see general.regexFilenames setting]
+The top-level key within a FileDefinition serves as the FileDefinition name. This name is matched against the input CSV file using either string match (case-insensitive) or regex (case-sensitive) [see general.regexFilenames setting].
 
-Two methods of providing a fileDefinition for a file are supported; inline and external
+Two methods of providing a fileDefinition for a file are supported; inline and external.
 
 #### Inline
 Provided as the value of the filename pattern key
@@ -446,7 +446,7 @@ a full list of supported platforms).
 
 In order to use an external cloud storage vendor additional dependencies might be required which are not automatically installed by CsvToFHIR. For example to support
 azure storage, install the `azure` extras package from the smart_open `pip install smart_open[azure]`. Again, see the smart_open documentation for additional information
-and examples
+and examples.
 
 A sample configuration to use a data contract stored in azure would look like:
 ```

@@ -29,7 +29,8 @@ conversion process. A single data contract file is used to support multiple CSVT
     "emptyFieldValues": [
       "empty",
       "\\n"
-    ]
+    ],
+    "regexFilenames": true
   }
 }
 ```
@@ -41,6 +42,8 @@ conversion process. A single data contract file is used to support multiple CSVT
 | assigningAuthority | The default assigning authority/system of record, applied to code values where needed                         | N        |
 | streamType         | Indicates if the incoming data is "historical" or "live"                                                      | Y        |
 | emptyFieldValues   | Additional field values which are treated as "empty" or NULL                                                  | N        |
+| regexFilenames     | Determines if the filename to fileDefinition matching will be regex based or simple string comparison. Default: False | N        |
+
 
 
 #### Validations
@@ -48,7 +51,12 @@ conversion process. A single data contract file is used to support multiple CSVT
 - streamType is either historical or live
 
 ### FileDefinition
-The top-level key within a FileDefinition serves as the FileDefinition name. This name is matched against the input CSV file (case-insensitive)
+The top-level key within a FileDefinition serves as the FileDefinition name. This name is matched against the input CSV file using either string match (case-insensitive) or regex (case-sensitive) [see general.regexFilenames setting].
+
+Two methods of providing a fileDefinition for a file are supported; inline and external.
+
+#### Inline
+Provided as the value of the filename pattern key
 ```json
 {
  "fileDefinitions": {
@@ -78,6 +86,16 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 | skiprows               | Skip rows from the csv file. Value can be in integet to skip that many lines from the top, or an array to skip rows with that index (0 based). e.g. `[2, 3]` will skip row 3 and 4 from the file (including headers)                     | N        |
 | headers                | Provides a header record for a CSV source file without a header. Column names reflect the target record format. When `fileType=fixed-width`, headers is a required field, and should be a dictionary of type <col_name>:<col_width>      | N        |
 | tasks                  | List of tasks to execute against the CSV source data, prior to FHIR conversion.                                                                                                                                                          | N        |
+
+#### External
+reference an external json file that contains the fileDefinition model. The path can be absolute or relative to the main data-contract
+```json
+{
+ "fileDefinitions": {
+    "Patient": "external-patient-file-definition.json"
+  }
+}
+```
 
 #### Validations
 
@@ -421,3 +439,17 @@ The top-level key within a FileDefinition serves as the FileDefinition name. Thi
 </table>
 
 
+## Alternative Datacontract locations
+CsvToFHIR uses the [smart_open](https://github.com/RaRe-Technologies/smart_open) library to read the Datacontract and any referenced file definitions within it.
+This allows CsvToFHIR to seamlessly support data contract files that are stored in external cloud storage such as S3, Azure Blob Storage etc. (see smart_open documentation for
+a full list of supported platforms).
+
+In order to use an external cloud storage vendor additional dependencies might be required which are not automatically installed by CsvToFHIR. For example to support
+azure storage, install the `azure` extras package from the smart_open `pip install smart_open[azure]`. Again, see the smart_open documentation for additional information
+and examples.
+
+A sample configuration to use a data contract stored in azure would look like:
+```
+export mapping_config_directory=azure://my_bucket/my_prefix/
+export mapping_config_file_name=data-contract.json
+```

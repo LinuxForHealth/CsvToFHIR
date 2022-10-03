@@ -1,4 +1,5 @@
 import json
+from os import path
 import pytz
 from enum import Enum
 from inspect import Parameter, signature
@@ -6,8 +7,11 @@ from pydantic import Field, root_validator, validator
 from typing import Any, Dict, List, Optional, Union
 from fhir.resources.fhirtypesvalidators import MODEL_CLASSES
 
+from linuxforhealth.csvtofhir.config import get_converter_config
 from linuxforhealth.csvtofhir.model.base import ImmutableModel
 from linuxforhealth.csvtofhir.support import get_logger
+
+from smart_open import open, parse_uri
 
 logger = get_logger(__name__)
 
@@ -63,6 +67,10 @@ class GeneralSection(ImmutableModel):
         default=DataStreamType.LIVE
     )
     emptyFieldValues: Optional[List[str]]
+    regexFilenames: bool = Field(
+        description="Controls whether the filenames should be compared using regex or simple string comparision",
+        default = False
+    )
 
     @validator("timeZone")
     def validate_time_zone(cls, v):
@@ -216,10 +224,29 @@ class DataContract(ImmutableModel):
     general: GeneralSection = Field(
         description="Contains settings applicable to all files"
     )
-    fileDefinitions: Dict[str, FileDefinition] = Field(
+    fileDefinitions: Dict[str, Union[FileDefinition, str] ] = Field(
         description="The DataContract's CSVToFHIR resource mappings"
     )
 
+    @validator("fileDefinitions")
+    def load_file_definitions(cls, values):
+        try:
+            for key, value in values.items():
+                if isinstance(value, str):
+                    if parse_uri(value).scheme == 'file' and not path.isabs(value):
+                        file_directory = path.dirname(get_converter_config().configuration_path)
+                        filepath = path.join(file_directory, value)
+                    else:
+                        filepath = value
+
+                    with open(filepath) as fd:
+                        file_definition = FileDefinition(**json.load(fd))
+                        values[key] = file_definition
+            return values
+        except Exception as e:
+            logger.error(f"Error fetching linked file definition {value}", exc_info=e)
+            raise e
+        
 
 def load_data_contract(file_path: str) -> DataContract:
     """

@@ -436,6 +436,61 @@ reference an external json file that contains the fileDefinition model. The path
       </pre>
     </td>
   </tr>
+  <tr>
+    <td>validate_value</td>
+    <td>
+    Validates the value of the column against the provided regex to confirm a complete match. An 
+    alternative value can be provided which will be used in case regex does not match
+    </td>
+    <td>
+    <b>column_name:</b> name of column to validate<br>
+    <b>regex:</b> regex to validate against<br>
+    <b>no_match_replacement:</b> replacement value if the regex does not match, defaults to None<br>
+    </td>
+    <td>
+      <pre>
+{
+  "name": "add_constant",
+  "params": {
+    "column_name": "company email",
+    "regex": "^[a-zA-Z0-0_\.]+@company.com",
+    "no_match_replacement": "invalid company email"
+  }
+}
+      </pre>
+    </td>
+  </tr>
+  <tr>
+    <td>join_data</td>
+    <td>
+    takes a secondary file (csv or fixed width) and joins the supplimentary data with the primary
+    dataframe based on some common joining key.
+    </td>
+    <td>
+    <b>secondary_data_source:</b> path to the secondary data file. Can be relative to the data-contract dictionary or absolute.<br>
+    <b>join_type:</b> {'left', 'right', 'outer', 'inner', 'cross'} which correspond roughly to the RDB join types of the same name.<br>
+    See "how" parameter of pandas.dataframe.merge function: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html<br>
+    <b>join_on:</b> Key that will be used to corelate the two data sets. The Key has to be named exactly the same in both datasets<br>
+    <b>source_type:</b> csv or fixed-width. default: csv<br>
+    <b>reader_params:</b> any additional parameters that need to be passed to pandas for reading the secondary file. default: None<br>
+    </td>
+    <td>
+      <pre>
+{
+  "name": "join_data",
+  "params": {
+    "secondary_data_source": "/path/to/secondary/file.csv",
+    "join_type": "outer",
+    "join_on": "MRN",
+    "source_type": "csv",
+    "reader_params": {
+      "some_panda_reader_param": "param value"
+    }
+  }
+}
+      </pre>
+    </td>
+  </tr>
 </table>
 
 

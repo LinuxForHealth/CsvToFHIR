@@ -3,6 +3,14 @@ import json
 import logging
 import os
 from typing import Dict, List
+from urllib.parse import urlparse
+import re
+
+# regex to see if a path is a windows path, beginning with a "drive" letter
+is_windows_path = re.compile("^[a-zA-Z]:")
+
+# open function from the base library
+_base_library_open = open
 
 
 def find_fhir_resources(resources: List, resource_type: str) -> List[Dict]:
@@ -107,3 +115,29 @@ def validate_paths(paths: List[str], raise_exception=True) -> List[str]:
         raise FileNotFoundError(msg)
 
     return invalid_paths
+
+
+def parse_uri_scheme(uri: str) -> str:
+    """
+    Parses the scheme from a URI.
+    Delegates to smart_open.parse_uri() URIs object if available.
+    If not smart_open is not available, urlparse is used.
+    """
+    # windows path, assume a "file" scheme
+    if is_windows_path.match(uri):
+        return "file"
+    try:
+        from smart_open import parse_uri
+        return parse_uri(uri).scheme
+    except ImportError:
+        # parse the uri using "file" as a default scheme
+        return urlparse(uri, scheme="file")[0]
+
+
+def open_file(*args, **kwargs):
+    """Opens a file based on installed options."""
+    try:
+        from smart_open import open
+        return open(*args, **kwargs)
+    except ImportError:
+        return _base_library_open(*args, **kwargs)

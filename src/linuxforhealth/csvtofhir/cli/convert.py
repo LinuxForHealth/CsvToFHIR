@@ -6,7 +6,7 @@ from typing import Dict, List
 
 from linuxforhealth.csvtofhir.converter import convert
 from linuxforhealth.csvtofhir.model.contract import DataContract, load_data_contract
-from linuxforhealth.csvtofhir.support import validate_paths
+from linuxforhealth.csvtofhir.support import validate_paths, open_file
 
 
 def _filter_input_files(input_files: List[str], config_dir: str) -> List[str]:
@@ -204,7 +204,7 @@ def _write_fhir_resources(
         fixture_file_name = f"{group_key}-{resource_type}-{source_file_id}-{resource_count_display}.json"
         fixture_path = os.path.join(group_key_dir, fixture_file_name)
 
-        with open(fixture_path, "w") as w:
+        with open_file(fixture_path, "w") as w:
             w.write(json.dumps(r, indent=4, sort_keys=True))
 
 

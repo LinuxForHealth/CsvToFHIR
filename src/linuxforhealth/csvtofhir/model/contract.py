@@ -9,9 +9,7 @@ from fhir.resources.fhirtypesvalidators import MODEL_CLASSES
 
 from linuxforhealth.csvtofhir.config import get_converter_config
 from linuxforhealth.csvtofhir.model.base import ImmutableModel
-from linuxforhealth.csvtofhir.support import get_logger
-
-from smart_open import open, parse_uri
+from linuxforhealth.csvtofhir.support import get_logger, parse_uri_scheme, open_file
 
 logger = get_logger(__name__)
 
@@ -216,7 +214,6 @@ class FileDefinition(ImmutableModel):
         return values
 
 
-
 class DataContract(ImmutableModel):
     """
     Specifies how CSV records are mapped to FHIR resources.
@@ -233,13 +230,13 @@ class DataContract(ImmutableModel):
         try:
             for key, value in values.items():
                 if isinstance(value, str):
-                    if parse_uri(value).scheme == 'file' and not path.isabs(value):
+                    if parse_uri_scheme(value) == 'file' and not path.isabs(value):
                         file_directory = path.dirname(get_converter_config().configuration_path)
                         filepath = path.join(file_directory, value)
                     else:
                         filepath = value
 
-                    with open(filepath) as fd:
+                    with open_file(filepath) as fd:
                         file_definition = FileDefinition(**json.load(fd))
                         values[key] = file_definition
             return values
@@ -254,5 +251,5 @@ def load_data_contract(file_path: str) -> DataContract:
     :param file_path: The path to the resource mapping configuration
     :return: dictionary
     """
-    with open(file_path, "rt") as r:
+    with open_file(file_path, "rt") as r:
         return DataContract(**json.load(r))

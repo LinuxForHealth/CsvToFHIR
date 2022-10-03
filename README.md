@@ -54,6 +54,17 @@ To execute unit tests, simply run:
 python -m pytest
 ```
 
+### Optimized Streaming Support
+Csv To FHIR provides an optimized means of streaming files using [smart_open](https://pypi.org/project/smart-open/). smart_open
+supports streaming files from common cloud storage stores (AWS, Azure, GCS) as well as over common transfer protocols such
+as HTTP, HTTPS, SFTP, HDFS, etc.
+
+To include smart_open, install the optimized-streaming extra
+
+```shell
+python -m pip install -e ".[optimized-streaming]"
+```
+
 ### CSVToFHIR CLI
 The CLI supports:
 

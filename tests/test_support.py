@@ -261,7 +261,7 @@ def test_validate_paths(data_contract_directory: str):
     [
         ("/opt/data/data.csv", "file"),
         ("C:/data/data.csv", "file"),
-        ("http://somserver/file.dat", "http")
+        ("http://someserver/file.dat", "http")
     ]
 )
 def test_parse_uri_scheme(input_uri, expected_uri):

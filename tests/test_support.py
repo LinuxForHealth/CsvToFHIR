@@ -5,9 +5,9 @@ from typing import Dict, List
 import pytest
 
 from linuxforhealth.csvtofhir.support import (find_fhir_resources, is_valid_year, read_csv,
+
                                               validate_paths, parse_uri_scheme)
-import sys
-from unittest import mock
+
 
 @pytest.fixture
 def practitioner() -> str:

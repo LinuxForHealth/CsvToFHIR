@@ -5,7 +5,8 @@ from typing import Dict, List
 import pytest
 
 from linuxforhealth.csvtofhir.support import (find_fhir_resources, is_valid_year, read_csv,
-                                              validate_paths)
+
+                                              validate_paths, parse_uri_scheme)
 
 
 @pytest.fixture
@@ -253,3 +254,16 @@ def test_validate_paths(data_contract_directory: str):
 
     with pytest.raises(FileNotFoundError):
         validate_paths(paths, raise_exception=True)
+
+
+@pytest.mark.parametrize(
+    "input_uri, expected_uri",
+    [
+        ("/opt/data/data.csv", "file"),
+        ("C:/data/data.csv", "file"),
+        ("http://someserver/file.dat", "http")
+    ]
+)
+def test_parse_uri_scheme(input_uri, expected_uri):
+    actual_scheme = parse_uri_scheme(input_uri)
+    assert expected_uri == actual_scheme

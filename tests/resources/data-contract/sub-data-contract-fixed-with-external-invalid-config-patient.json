@@ -1,0 +1,16 @@
+{
+    "fileType": "fixed-width",
+    "valueDelimiter": ",",
+    "groupByKey": "patientId",
+    "headers": {
+      "hospitalId": 6,
+      "encounterId": 8,
+      "patientId": 8,
+      "sex": 1,
+      "dateOfBirth": 10,
+      "givenName": 12,
+      "familyName": 12,
+      "ssn": 11,
+      "state": 16
+    }
+}

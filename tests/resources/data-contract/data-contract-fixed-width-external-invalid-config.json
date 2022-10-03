@@ -1,0 +1,15 @@
+{
+  "general": {
+    "timeZone": "US/Eastern",
+    "tenantId": "sample-tenant",
+    "streamType": "live",
+    "emptyFieldValues": [
+      "empty",
+      "\\n"
+    ],
+    "regexFilenames": true
+  },
+  "fileDefinitions": {
+    "2022.*\\-patient\\-fwf": "sub-data-contract-fixed-with-external-invalid-config-patient.json"
+  }
+}

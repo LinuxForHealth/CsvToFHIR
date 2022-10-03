@@ -11,7 +11,7 @@ from pandas import DataFrame, Series
 from linuxforhealth.csvtofhir import support
 from linuxforhealth.csvtofhir.config import get_converter_config
 from linuxforhealth.csvtofhir.model.contract import FileType
-from linuxforhealth.csvtofhir.support import read_csv
+from linuxforhealth.csvtofhir.support import read_csv, parse_uri_scheme
 # Do not remove, required for _build_status_history task
 from linuxforhealth.csvtofhir.model.csv.encounter import EncounterStatusHistoryEntry
 # Do not remove, required for build_object_array task
@@ -1064,6 +1064,7 @@ def join_data(
 
     :param data_frame: The input DataFrame
     :param secondary_data_source: path to the secondary data file. Can be relative to the data-contract dictionary or absolute.
+    Also supports http, ftp, s3 and gs paths
     :param join_type: {'left', 'right', 'outer', 'inner', 'cross'} which correspond roughly to the RDB join types of the same name.
     See "how" parameter of pandas.dataframe.merge function: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html
     :param join_on: Key that will be used to corelate the two data sets. The Key has to be named exactly the same in both datasets
@@ -1072,10 +1073,11 @@ def join_data(
 
     :return: The updated DataFrame.
     """
-    if not os.path.isabs(secondary_data_source):
+    if parse_uri_scheme(secondary_data_source) == 'file' and not os.path.isabs(secondary_data_source):
         file_directory = os.path.dirname(get_converter_config().configuration_path)
         filepath = os.path.join(file_directory, secondary_data_source)
     else:
+        # Pandas supports http, ftp, s3 and gs file natively.
         filepath = secondary_data_source
 
     if reader_params is None:

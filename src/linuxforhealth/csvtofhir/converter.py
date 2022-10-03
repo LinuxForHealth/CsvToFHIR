@@ -6,7 +6,7 @@ import pandas as pd
 from fhir.resources.meta import Meta
 from numpy import integer
 from pandas import DataFrame, Series
-from smart_open import parse_uri
+from linuxforhealth.csvtofhir.support import parse_uri_scheme
 
 from linuxforhealth.csvtofhir.model.contract import FileType
 
@@ -38,7 +38,7 @@ def validate_contract() -> DataContract:
     """
     config = get_converter_config()
 
-    if parse_uri(config.configuration_path).scheme == 'file' and not os.path.exists(config.configuration_path):
+    if parse_uri_scheme(config.configuration_path) == 'file' and not os.path.exists(config.configuration_path):
         msg = f"Unable to load Data Contract configuration from {config.configuration_path}"
         logger.error(msg)
         raise FileNotFoundError(msg)
@@ -204,7 +204,6 @@ def _convert(file_path: str, create_fhir_resources: bool) -> Generator[Tuple[Any
     file_name = os.path.basename(file_path)
     file_definition_lookup = os.path.splitext(file_name)[0]
     file_definition: Optional[FileDefinition] = None
-
 
     for k, v in contract.fileDefinitions.items():
         if contract.general.regexFilenames:

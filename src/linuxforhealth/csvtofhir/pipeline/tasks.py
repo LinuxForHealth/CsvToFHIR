@@ -1057,15 +1057,15 @@ def join_data(
     first name, last name, gender, MRN
 
     supplimentary data:
-    MRN, residentail address
+    MRN, residential address
 
-    after a join, the primary dataframe should contain the residential address of each patient 
+    after a join on the MRN column, the primary dataframe should contain the residential address of each patient 
     as long as it was present in the supplimentary data.
 
     :param data_frame: The input DataFrame
     :param secondary_data_source: path to the secondary data file. Can be relative to the data-contract dictionary or absolute.
     Also supports http, ftp, s3 and gs paths
-    :param join_type: {'left', 'right', 'outer', 'inner', 'cross'} which correspond roughly to the RDB join types of the same name.
+    :param join_type: {'left', 'right', 'outer', 'inner', 'cross'} which correspond roughly to the join types in relational databases by the same name
     See "how" parameter of pandas.dataframe.merge function: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html
     :param join_on: Key that will be used to corelate the two data sets. The Key has to be named exactly the same in both datasets
     :param source_type: csv or fixed-width. default: csv

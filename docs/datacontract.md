@@ -450,7 +450,7 @@ reference an external json file that contains the fileDefinition model. The path
     <td>
       <pre>
 {
-  "name": "add_constant",
+  "name": "validate_value",
   "params": {
     "column_name": "company email",
     "regex": "^[a-zA-Z0-0_\.]+@company.com",
@@ -468,7 +468,7 @@ reference an external json file that contains the fileDefinition model. The path
     </td>
     <td>
     <b>secondary_data_source:</b> path to the secondary data file. Can be relative to the data-contract dictionary or absolute.<br>
-    <b>join_type:</b> {'left', 'right', 'outer', 'inner', 'cross'} which correspond roughly to the RDB join types of the same name.<br>
+    <b>join_type:</b> {'left', 'right', 'outer', 'inner', 'cross'} which correspond roughly to the join types in relational databases by the same name.<br>
     See "how" parameter of pandas.dataframe.merge function: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html<br>
     <b>join_on:</b> Key that will be used to corelate the two data sets. The Key has to be named exactly the same in both datasets<br>
     <b>source_type:</b> csv or fixed-width. default: csv<br>

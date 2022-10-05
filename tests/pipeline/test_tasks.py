@@ -1372,7 +1372,7 @@ def test_validate_value():
     assert actual["input1"][1] == "FailedToMatch"
 
 
-def test_join_data():
+def test_join_data_left():
     data = {
         "firstname": ["patient1", "patient2", "patient3"],
         "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
@@ -1381,6 +1381,51 @@ def test_join_data():
     secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
     
     actual = join_data(input_df, secondary_file, 'left', 'MRN')
+    assert actual.shape == (3,3)
     assert actual['lastname'][0] == 'last1'
     assert math.isnan(actual['lastname'][1])
     assert actual['lastname'][2] == 'last3'
+
+
+def test_join_data_right():
+    data = {
+        "firstname": ["patient1", "patient2", "patient3"],
+        "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
+    
+    actual = join_data(input_df, secondary_file, 'right', 'MRN')
+    assert actual.shape == (4,3)
+    assert 'patient2' not in actual['firstname'].unique()
+    
+
+def test_join_data_inner():
+    data = {
+        "firstname": ["patient1", "patient2", "patient3"],
+        "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
+    
+    actual = join_data(input_df, secondary_file, 'inner', 'MRN')
+    assert actual.shape == (2,3)
+    assert 'patient2' not in actual['firstname'].unique()
+    assert 'last4' not in actual['lastname'].unique()
+
+
+def test_join_data_outer():
+    data = {
+        "firstname": ["patient1", "patient2", "patient3"],
+        "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
+    
+    actual = join_data(input_df, secondary_file, 'outer', 'MRN')
+    assert actual.shape == (5,3)
+    patient2_row = actual.loc[actual['firstname'] == 'patient2']
+    last4_row = actual.loc[actual['lastname'] == 'last4']
+    assert math.isnan(patient2_row['lastname'])
+    assert math.isnan(last4_row['firstname'])
+    

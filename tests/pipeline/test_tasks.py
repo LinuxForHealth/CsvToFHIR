@@ -1,4 +1,6 @@
 from datetime import date
+import math
+import os
 from typing import List
 
 import numpy as np
@@ -18,7 +20,9 @@ from linuxforhealth.csvtofhir.pipeline.tasks import (add_constant, add_row_num, 
                                                      format_date, map_codes,
                                                      remove_whitespace_from_columns,
                                                      rename_columns, replace_text,
-                                                     set_nan_to_none, split_column, split_row)
+                                                     set_nan_to_none, split_column, split_row,
+                                                     validate_value, join_data)
+from tests.support import resources_directory
 
 
 @pytest.fixture
@@ -1353,3 +1357,75 @@ def test_append_list_multiple_rows():
 
     actual: DataFrame = append_list(input_df, ["input1", "input2"], "target", discard_if_duplicate=False)
     assert_frame_equal(expected_df, actual)
+
+
+def test_validate_value():
+    data = {
+        "input1": ["111a^^NDC", "111b^^NDCs", "111c^^NDC"],
+        "input2": ["222a^^RxNorm", "222b^^RxNorm", "222c^^RxNorm"],
+        "input3": ["333a^^LOINC", "333b^^LOINC", "333c^^LOINC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    actual = validate_value(input_df, 'input1', '111.*NDC$', "FailedToMatch")
+    assert actual["input1"][0] == input_df["input1"][0]
+    assert actual["input1"][2] == input_df["input1"][2]
+    assert actual["input1"][1] == "FailedToMatch"
+
+
+def test_join_data_left():
+    data = {
+        "firstname": ["patient1", "patient2", "patient3"],
+        "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
+    
+    actual = join_data(input_df, secondary_file, 'left', 'MRN')
+    assert actual.shape == (3,3)
+    assert actual['lastname'][0] == 'last1'
+    assert math.isnan(actual['lastname'][1])
+    assert actual['lastname'][2] == 'last3'
+
+
+def test_join_data_right():
+    data = {
+        "firstname": ["patient1", "patient2", "patient3"],
+        "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
+    
+    actual = join_data(input_df, secondary_file, 'right', 'MRN')
+    assert actual.shape == (4,3)
+    assert 'patient2' not in actual['firstname'].unique()
+    
+
+def test_join_data_inner():
+    data = {
+        "firstname": ["patient1", "patient2", "patient3"],
+        "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
+    
+    actual = join_data(input_df, secondary_file, 'inner', 'MRN')
+    assert actual.shape == (2,3)
+    assert 'patient2' not in actual['firstname'].unique()
+    assert 'last4' not in actual['lastname'].unique()
+
+
+def test_join_data_outer():
+    data = {
+        "firstname": ["patient1", "patient2", "patient3"],
+        "MRN": ["111a^^NDC", "111b^^NDC", "111c^^NDC"],
+    }
+    input_df: DataFrame = pd.DataFrame(data)
+    secondary_file = os.path.join(resources_directory, 'csv', 'patient-lastnames.csv')
+    
+    actual = join_data(input_df, secondary_file, 'outer', 'MRN')
+    assert actual.shape == (5,3)
+    patient2_row = actual.loc[actual['firstname'] == 'patient2']
+    last4_row = actual.loc[actual['lastname'] == 'last4']
+    assert math.isnan(patient2_row['lastname'])
+    assert math.isnan(last4_row['firstname'])
+    

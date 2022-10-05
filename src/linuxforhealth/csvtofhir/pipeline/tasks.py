@@ -10,7 +10,8 @@ from pandas import DataFrame, Series
 
 from linuxforhealth.csvtofhir import support
 from linuxforhealth.csvtofhir.config import get_converter_config
-from linuxforhealth.csvtofhir.support import read_csv
+from linuxforhealth.csvtofhir.model.contract import FileType
+from linuxforhealth.csvtofhir.support import read_csv, parse_uri_scheme
 # Do not remove, required for _build_status_history task
 from linuxforhealth.csvtofhir.model.csv.encounter import EncounterStatusHistoryEntry
 # Do not remove, required for build_object_array task
@@ -1036,4 +1037,89 @@ def append_list(
     finally:
         if "tmp" in data_frame.columns:
             data_frame.drop(["tmp"], axis=1, inplace=True)
+    return data_frame
+
+
+def join_data(
+    data_frame: DataFrame,
+    secondary_data_source: str,
+    join_type: str,
+    join_on: str,
+    source_type: str = "csv",
+    reader_params: Optional[Dict] = None
+) -> DataFrame:
+    """
+    takes a secondary file (csv or fixed width) and joins the supplimentary data with the primary
+    dataframe based on some common joining key.
+
+    Example:
+    primary dataframe Patient:
+    first name, last name, gender, MRN
+
+    supplimentary data:
+    MRN, residential address
+
+    after a join on the MRN column, the primary dataframe should contain the residential address of each patient 
+    as long as it was present in the supplimentary data.
+
+    :param data_frame: The input DataFrame
+    :param secondary_data_source: path to the secondary data file. Can be relative to the data-contract dictionary or absolute.
+    Also supports http, ftp, s3 and gs paths
+    :param join_type: {'left', 'right', 'outer', 'inner', 'cross'} which correspond roughly to the join types in relational databases by the same name
+    See "how" parameter of pandas.dataframe.merge function: https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.merge.html
+    :param join_on: Key that will be used to corelate the two data sets. The Key has to be named exactly the same in both datasets
+    :param source_type: csv or fixed-width. default: csv
+    :param reader_params: any additional parameters that need to be passed to pandas for reading the secondary file. default: None
+
+    :return: The updated DataFrame.
+    """
+    if parse_uri_scheme(secondary_data_source) == 'file' and not os.path.isabs(secondary_data_source):
+        file_directory = os.path.dirname(get_converter_config().configuration_path)
+        filepath = os.path.join(file_directory, secondary_data_source)
+    else:
+        # Pandas supports http, ftp, s3 and gs file natively.
+        filepath = secondary_data_source
+
+    if reader_params is None:
+        reader_params = {}
+    source_type_enum = FileType(source_type)
+
+    if source_type_enum == FileType.CSV:
+        right_df = pd.read_csv(filepath, **reader_params)
+    else:
+        right_df = pd.read_fwf(filepath, **reader_params)
+    try:
+        data_frame = data_frame.merge(right_df, join_type, join_on)
+    except Exception as e:
+        logger.error("Error", exc_info=e)
+    return data_frame
+
+
+def _validate_regex(value, regex, no_match_replacement):
+    search_result = re.search(regex, value)
+    return no_match_replacement if search_result is None else value
+
+
+def validate_value(
+    data_frame: DataFrame,
+    column_name: str,
+    regex: str,
+    no_match_replacement: Optional[str] = None
+) -> DataFrame:
+    """
+    Validates the value of the column against the provided regex to confirm a complete match.
+    
+    :param data_frame: The input DataFrame
+    :param column_name: The DataFrame column name.
+    :param regex: the REGEX agaist which the value will be validated
+    "param no_match_replacement: [Optional] If the regex is not a match, replace the column value
+                                 with this literal. default = None
+    
+    :return: The updated DataFrame.
+    """
+    
+    data_frame[column_name] = data_frame[column_name].apply(
+        _validate_regex, args=(regex, no_match_replacement)  # passes value in data frame as first parm
+    )
+    
     return data_frame
